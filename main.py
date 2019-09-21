@@ -11,7 +11,10 @@ client = dc.Client()
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
 
-# async def on_message():
-#     print("Message received!")
+@client.event
+async def on_message(message):
+    if message.content == "test":
+        print("Message received!")
+        await message.channel.send("tested")
 
 client.run(token)
