@@ -2,8 +2,12 @@ import discord as dc
 
 client = dc.Client()
 
-
-def messageEventsFunc(messageIn):
-    messageIn.channel.send("test")
-    print("pinged message")
+@client.event
+async def messageEventsFunc(messageIn):
+    await message.channel.content('You sent a message!')
+    print('pinged message')
+    print(messageIn)
+    if messageIn == '?set event':
+        print('Event received!')
+        
 
