@@ -1,7 +1,7 @@
 import discord as dc 
 import os
 from dotenv import load_dotenv
-# import messageEvents as mEvents
+import messageEvents as mEvents
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -20,14 +20,10 @@ dateEntered = False
 async def on_message(message):
     if message.author == client.user:
         return
-    if dateEntered:
-        await message.channel.send('please enter a time')
-    if message.content.startswith('?'):
-        print('legit message')
-        if message.content == '?set event':
-            print('event')
-            await message.channel.send('please enter a date')
-            dateEntered = True
+    print(message.content)
+    print(message)
+    await mEvents.handleMessage(message, message.content)
+    # await mEvents.handleMessage(message, message.content)
 
 
 # @client.event
