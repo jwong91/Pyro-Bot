@@ -23,7 +23,7 @@ async def on_message(message):
     user = str(message.author).split('#')[0]
     print(type(user))
     if message.content.startswith('?'):
-        await mEvents.handleMessage(message, message.content, user)
+        await mEvents.handleMessage(message, message.content, user, message.author.id)
 
 
 # @client.event
