@@ -20,10 +20,10 @@ dateEntered = False
 async def on_message(message):
     if message.author == client.user:
         return
-    print(message.content)
-    print(message)
-    await mEvents.handleMessage(message, message.content)
-    # await mEvents.handleMessage(message, message.content)
+    user = str(message.author).split('#')[0]
+    print(type(user))
+    if message.content.startswith('?'):
+        await mEvents.handleMessage(message, message.content, user)
 
 
 # @client.event

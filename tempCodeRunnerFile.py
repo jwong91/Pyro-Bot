@@ -1,2 +1,2 @@
 
-# @client.event
+    userStr = str(user)
