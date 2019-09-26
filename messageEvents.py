@@ -7,7 +7,7 @@ boomerYesCount = 0
 boomerNoCount = 0
 
 @client.event
-async def handleMessage(message, messageContent, user, authorID):
+async def handleMessage(message, messageContent, user, authorID, mentionedUser):
     # if user == '10mbRAM':
     #     await message.channel.send(user + ' hello')
     # elif user == 'Whole Wheat Orange':
@@ -24,20 +24,34 @@ async def handleMessage(message, messageContent, user, authorID):
     global boomerNoCount
     global boomerYesCount
 
-    if messageContent == '?boomer':
+    if messageContent.startswith('?boomer'):
         boomer = rand.randint(0,1)
-        if boomer == 0:
-            await message.channel.send('<@' + str(authorID) + '>' + ' is no boomer')
-            boomerNoCount += 1
-            print(boomerNoCount)
-        elif boomer == 1:
-            await message.channel.send('<@' + str(authorID) + '>' + ' is yes boomer')
-            boomerYesCount += 1
-            print(boomerYesCount)
+        print('!!!!')
 
-    if messageContent == '?boomercount':
-        await message.channel.send('yes: ' + str(boomerYesCount))
-        await message.channel.send('no: ' + str(boomerNoCount))
+        if len(messageContent) > len('?boomer'):
+            print('!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            if boomer == 0:
+                await message.channel.send('<@' + str(mentionedUser) + '>' + ' is no boomer')
+                boomerNoCount += 1
+                print(boomerNoCount)
+            elif boomer == 1:
+                await message.channel.send('<@' + str(mentionedUser) + '>' + ' is yes boomer')
+                boomerYesCount += 1
+                print(boomerYesCount)
+        
+        if messageContent == '?boomer':
+            if boomer == 0:
+                await message.channel.send('<@' + str(authorID) + '>' + ' is no boomer')
+                boomerNoCount += 1
+                print(boomerNoCount)
+            elif boomer == 1:
+                await message.channel.send('<@' + str(authorID) + '>' + ' is yes boomer')
+                boomerYesCount += 1
+                print(boomerYesCount)
+
+        if messageContent == '?boomercount':
+            await message.channel.send('yes: ' + str(boomerYesCount))
+            await message.channel.send('no: ' + str(boomerNoCount))
 
     print(messageContent)
     print(user)
