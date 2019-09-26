@@ -2,11 +2,13 @@ import discord as dc
 import os
 from dotenv import load_dotenv
 import messageEvents as mEvents
+from discord.ext.commands import Bot
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
+BOT_PREFIX = ('?')
 
-client = dc.Client()
+client = Bot(command_prefix=(BOT_PREFIX))
 
 
 @client.event
@@ -26,8 +28,8 @@ async def on_message(message):
         messageMentions = message.mentions[0].id
     except:
         messageMentions = ''
-    if message.content.startswith('?'):
-        await mEvents.handleMessage(message, message.content, user, message.author.id, messageMentions)
+    
+    await mEvents.handleMessage(message, message.content, user, message.author.id, messageMentions)
 
 
 # @client.event

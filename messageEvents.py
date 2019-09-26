@@ -25,7 +25,7 @@ async def handleMessage(message, messageContent, user, authorID, mentionedUser):
     global boomerYesCount
 
     if messageContent.startswith('?boomer'):
-        boomer = rand.randint(0,1)
+        boomer = rand.randint(0, 1)
 
         if len(str(mentionedUser)) > 1:
             if boomer == 0:
