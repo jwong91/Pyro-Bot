@@ -27,7 +27,7 @@ async def handleMessage(message, messageContent, user, authorID, mentionedUser):
     if messageContent.startswith('?boomer'):
         boomer = rand.randint(0, 1)
 
-        if len(str(mentionedUser)) > 1:
+        if len(str(mentionedUser)) > 0:
             if boomer == 0:
                 await message.channel.send('<@' + str(mentionedUser) + '>' + ' is no boomer')
                 boomerNoCount += 1
@@ -50,6 +50,9 @@ async def handleMessage(message, messageContent, user, authorID, mentionedUser):
         if messageContent == '?boomercount':
             await message.channel.send('yes: ' + str(boomerYesCount))
             await message.channel.send('no: ' + str(boomerNoCount))
+
+    if messageContent == '?bomer':
+        await message.channel.send('learn to type, loser')
 
     print(messageContent)
     print(user)
