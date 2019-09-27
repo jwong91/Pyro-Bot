@@ -1,5 +1,6 @@
 import discord as dc
 import random as rand
+import prepFuncts as fn
 
 client = dc.Client()
 
@@ -51,8 +52,8 @@ async def handleMessage(message, messageContent, user, authorID, mentionedUser):
             await message.channel.send('yes: ' + str(boomerYesCount))
             await message.channel.send('no: ' + str(boomerNoCount))
 
-    if messageContent == '?bomer':
-        await message.channel.send('learn to type, loser')
+    if messageContent in fn.boomerMisspellings:
+        await message.channel.send('learn to type, loser' + ' <:face:627141817678168064>')
 
     print(messageContent)
     print(user)
