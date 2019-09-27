@@ -1,5 +1,6 @@
 import discord as dc
 
+
 boomerMisspellings = [
     '?oomer',
     '?bomer',
