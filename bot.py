@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import messageEvents as mEvents
 from discord.ext.commands import Bot
+import eventCreator 
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
