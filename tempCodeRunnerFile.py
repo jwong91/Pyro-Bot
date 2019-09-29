@@ -1,2 +1,0 @@
-
-    userStr = str(user)
