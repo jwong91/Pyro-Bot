@@ -1,0 +1,5 @@
+#!/bin/bash
+pwd
+source venv/bin/activate
+echo activated
+echo if python errors check source path
