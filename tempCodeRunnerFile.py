@@ -1,0 +1,2 @@
+
+    userStr = str(user)
