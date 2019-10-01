@@ -1,15 +1,17 @@
 import discord as dc 
 import os
 from dotenv import load_dotenv
-import messageEvents as mEvents
+# import messageEvents as mEvents
 from discord.ext.commands import Bot
-import eventCreator 
+from discord.ext import commands
+# import eventCreator 
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 BOT_PREFIX = ('?')
 
-client = Bot(command_prefix=(BOT_PREFIX))
+bot = commands.Bot(command_prefix=(BOT_PREFIX))
+client = dc.Client()
 
 
 @client.event
@@ -19,25 +21,10 @@ async def on_ready():
 
 dateEntered = False
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    user = str(message.author).split('#')[0]
-    print(type(user))
-    try:
-        messageMentions = message.mentions[0].id
-    except:
-        messageMentions = ''
-    
-    await mEvents.handleMessage(message, message.content, user, message.author.id, messageMentions)
-
-
-# @client.event
-# async def on_message(message):
-#     if message.author == client.user:
-#         return
-#     eventDate = message.content
-#     print(eventDate)
+@bot.command()
+async def boomer(ctx, arg):
+    print(arg)
+    print(ctx)
+    await ctx.send(arg)
 
 client.run(token)
