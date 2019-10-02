@@ -13,6 +13,7 @@ BOT_PREFIX = ('?') #Eventually put this into a config/.env file
 bot = commands.Bot(command_prefix=(BOT_PREFIX))
 
 
+
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
