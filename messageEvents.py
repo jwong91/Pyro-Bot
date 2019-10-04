@@ -7,6 +7,8 @@ client = dc.Client()
 boomerYesCount = 0
 boomerNoCount = 0
 
+atUser = lambda user : '<@' + user + '>'
+
 @client.event
 async def handleMessage(message, messageContent, user, authorID, mentionedUser):
     # if user == '10mbRAM':
@@ -40,11 +42,11 @@ async def handleMessage(message, messageContent, user, authorID, mentionedUser):
         
         if messageContent == '?boomer':
             if boomer == 0:
-                await message.channel.send('<@' + str(authorID) + '>' + ' is no boomer')
+                await message.channel.send(atUser(str(authorID)) + ' is no boomer')
                 boomerNoCount += 1
                 print(boomerNoCount)
             elif boomer == 1:
-                await message.channel.send('<@' + str(authorID) + '>' + ' is yes boomer')
+                await message.channel.send(atUser(str(authorID)) + ' is yes boomer')
                 boomerYesCount += 1
                 print(boomerYesCount)
 
