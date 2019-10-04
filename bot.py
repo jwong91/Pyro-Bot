@@ -1,43 +1,53 @@
 import discord as dc 
 import os
 from dotenv import load_dotenv
-import messageEvents as mEvents
 from discord.ext.commands import Bot
-import eventCreator 
+from discord.ext import commands
+from discord.ext.commands import CommandNotFound
+import prepFuncts as fn
+# import eventCreator 
+import messageEvents as mEvents
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-BOT_PREFIX = ('?')
+BOT_PREFIX = ('?') #Eventually put this into a config/.env file
 
-client = Bot(command_prefix=(BOT_PREFIX))
+bot = commands.Bot(command_prefix=(BOT_PREFIX))
 
 
-@client.event
+
+@bot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'{bot.user} has connected to Discord!')
+
+@bot.event
+async def on_command_error(ctx, error):
+    print('Bad command: ' + ctx.message.content)
+    if ctx.message.content in fn.boomerMisspellings:
+        await ctx.send('learn to type, boomer' + ' <:face:627141817678168064>')
+    else:
+        await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
+
+ 
     
-
-dateEntered = False
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    user = str(message.author).split('#')[0]
-    print(type(user))
+@bot.command()
+async def boomer(ctx, *arg):
+    author = ctx.author.id
     try:
-        messageMentions = message.mentions[0].id
+        mentionedUser = ctx.message.mentions[0].id
     except:
-        messageMentions = ''
-    
-    await mEvents.handleMessage(message, message.content, user, message.author.id, messageMentions)
+        mentionedUser = ''
+    await mEvents.handleBoomer(ctx, author, mentionedUser, *arg)
+    print(ctx.author.id)
+
+@bot.command()
+async def boomercount(ctx, arg='()'):
+    if arg != '()':
+        return
+    await mEvents.handleBoomercount(ctx)
 
 
-# @client.event
-# async def on_message(message):
-#     if message.author == client.user:
-#         return
-#     eventDate = message.content
-#     print(eventDate)
 
-client.run(token)
+
+
+bot.run(token)

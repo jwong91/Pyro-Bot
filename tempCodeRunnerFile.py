@@ -1,2 +1,1 @@
-
-    userStr = str(user)
+Discord
