@@ -67,7 +67,11 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         await ctx.send('Too many details')
         return
 
-    await ctx.send('Event details: ' + title + ' ' + date + ' ' + sTime + ' ' + eTime + ' ' + desc)
+    await ctx.send('Event details: ' + 'Name: ' + title + '  ' \
+        + 'Date: ' + date + '  ' \
+        + 'Start time: ' + sTime + '  ' \
+        + 'End time: ' + eTime + '  ' \
+        + 'Desciption: ' + desc)
     
 
 
