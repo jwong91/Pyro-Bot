@@ -5,7 +5,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 import prepFuncts as fn
-# import eventCreator 
+import eventCreator as eCreate 
 import messageEvents as mEvents
 
 load_dotenv()
@@ -45,6 +45,30 @@ async def boomercount(ctx, arg='()'):
     if arg != '()':
         return
     await mEvents.handleBoomercount(ctx)
+
+@bot.command()
+async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', lengthCatcher='()'):
+    if title == '()':
+        await ctx.send('Missing a title')
+        return
+    if date =='()':
+        await ctx.send('Missing a date')
+        return
+    if sTime == '()':
+        await ctx.send('Missing a start time')
+        return
+    if eTime == '()':
+        await ctx.send('Missing an end time')
+        return
+    if desc == '()':
+        await ctx.send('Missing a description')
+        return
+    if lengthCatcher != '()':
+        await ctx.send('Too many details')
+        return
+
+    await ctx.send('Event details: ' + title + ' ' + date + ' ' + sTime + ' ' + eTime + ' ' + desc)
+    
 
 
 
