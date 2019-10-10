@@ -48,35 +48,37 @@ async def boomercount(ctx, arg='()'):
     await mEvents.handleBoomercount(ctx)
 
 @bot.command()
-async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', lengthCatcher='()'):
-    if title == '()':
-        await ctx.send('Missing a title')
-        return
-    if date =='()':
-        await ctx.send('Missing a date')
-        return
-    if sTime == '()':
-        await ctx.send('Missing a start time')
-        return
-    if eTime == '()':
-        await ctx.send('Missing an end time')
-        return
-    if desc == '()':
-        await ctx.send('Missing a description')
-        return
-    if lengthCatcher != '()':
-        await ctx.send('Too many details')
-        return
+async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()'):
+    # if title == '()':
+    #     await ctx.send('Missing a title')
+    #     return
+    # if date =='()':
+    #     await ctx.send('Missing a date')
+    #     return
+    # if sTime == '()':
+    #     await ctx.send('Missing a start time')
+    #     return
+    # if eTime == '()':
+    #     await ctx.send('Missing an end time')
+    #     return
+    # if desc == '()':
+    #     await ctx.send('Missing a description')
+    #     return
+    # if lengthCatcher != '()':
+    #     await ctx.send('Too many details')
+    #     return
 
-    await ctx.send('Event details: ' \
-        + 'Name: ' + title + '  ' \
-        + 'Date: ' + date + '  ' \
-        + 'Start time: ' + sTime + '  ' \
-        + 'End time: ' + eTime + '  ' \
-        + 'Desciption: ' + desc)
+    # await ctx.send('Event details: ' \
+    #     + 'Name: ' + title + '  ' \
+    #     + 'Date: ' + date + '  ' \
+    #     + 'Start time: ' + sTime + '  ' \
+    #     + 'End time: ' + eTime + '  ' \
+    #     + 'Desciption: ' + desc)
     
     # print(eCreate.splitDate(ctx, date))
-    await eCreate.splitDate(ctx, date)
+    await ctx.send('event!')
+    await eCreate.handleEvent(ctx, date)
+    print('event!')
 
 @bot.command()
 async def bot_quit(ctx):
