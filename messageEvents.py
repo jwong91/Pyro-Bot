@@ -31,5 +31,6 @@ async def handleBoomer(ctx, author, mentionedUser, *arg):
 async def handleBoomercount(ctx):
     await ctx.send('yes: ' + str(boomerYes))
     await ctx.send('no: ' + str(boomerNo))
+
         
 

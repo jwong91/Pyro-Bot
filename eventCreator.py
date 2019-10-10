@@ -1,20 +1,21 @@
 import discord as dc 
 import datetime as dt
-import bot 
 
-
+boomerNo = 1
+boomerYes = 2
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
-async def handleEvent(ctx, date, *arg):
-    # split = date.split('/')
-    # year = split[0]
-    # month = split[1]
-    # day = split[2]
+async def splitMessage(ctx, date):
+    split = date.split('/')
+    year = split[2]
+    month = split[1]
+    day = split[0]
     # date = dt.date(year, month, day)
-    # await ctx.send(str(date.year))
+    await ctx.send(str(split))
+    await ctx.send(year)
+    await ctx.send('messageSplit')
     # return str(date)
-    await ctx.send("handled event")
     
 
 async def parseEventInput(ctx, input): #Parses string into date, time, and description. 
