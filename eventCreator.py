@@ -1,21 +1,20 @@
 import discord as dc 
-import datetime as dt
+
 
 boomerNo = 1
 boomerYes = 2
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
-async def splitMessage(ctx, date):
+async def parseDate(ctx, date):
     split = date.split('/')
     year = split[2]
     month = split[1]
     day = split[0]
-    # date = dt.date(year, month, day)
-    await ctx.send(str(split))
-    await ctx.send(year)
+    date = {'Year': year, 'Month': month, 'Day': day}
+    await ctx.send(str(date))
     await ctx.send('messageSplit')
-    # return str(date)
+    return date
     
 
 async def parseEventInput(ctx, input): #Parses string into date, time, and description. 
