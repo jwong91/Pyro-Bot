@@ -6,15 +6,17 @@ boomerYes = 2
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
-async def parseDate(ctx, date):
+def parseDate(ctx, date):
     split = date.split('/')
-    year = split[2]
-    month = split[1]
-    day = split[0]
-    date = {'Year': year, 'Month': month, 'Day': day}
-    await ctx.send(str(date))
-    await ctx.send('messageSplit')
-    return date
+    try:
+        year = split[2]
+        month = split[1]
+        day = split[0]
+        date = {'Year': year, 'Month': month, 'Day': day}
+        return date
+    except:
+        print('invalid date')
+
     
 
 async def parseEventInput(ctx, input): #Parses string into date, time, and description. 
@@ -27,5 +29,5 @@ async def parseEventInput(ctx, input): #Parses string into date, time, and descr
     await ctx.send(sTime + eTime + date + description)
     return sTime, eTime, date, description
 
-async def createEvent(date, time, description): 
-    return
+
+    

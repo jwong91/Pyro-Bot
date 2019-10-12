@@ -1,9 +1,20 @@
 import discord as dc
 import random as rand
 import prepFuncts as fn
+import asyncio 
 
 boomerNo = 0
 boomerYes = 0
+
+async def handleEvent(ctx, date, time, desc): 
+    global boomerYes
+    global boomerNo
+    await ctx.send('event create')
+    print('Create Event: ')
+    print('Year: ' + date.get('Year'))
+    print('Time: ' + time)
+    print('Description: ' + desc)
+    print('Creating event: Year: ' + date.get('Year'))
 
 async def handleBoomer(ctx, author, mentionedUser, *arg):
     global boomerNo
@@ -32,5 +43,27 @@ async def handleBoomercount(ctx):
     await ctx.send('yes: ' + str(boomerYes))
     await ctx.send('no: ' + str(boomerNo))
 
-        
+@asyncio.coroutine
+# async def createEvent(ctx, date, time, desc): 
+#     await ctx.send('event create')
+#     print('Create Event: ')
+#     print(str(date))
+#     print(time)
+#     print(desc)
+#     print('Creating event: Year: ' + date.get('Year'))
 
+
+def parseDate(ctx, date):
+    print('parsedate')
+    split = date.split('/')
+    year = split[2]
+    month = split[1]
+    day = split[0]
+    date = {'Year': year, 'Month': month, 'Day': day}
+    return str(date)
+
+def argFunc(val):
+    return val
+
+def testFunc(value):
+    print('val: ' + value)

@@ -7,6 +7,13 @@ from discord.ext.commands import CommandNotFound
 import prepFuncts as fn
 import eventCreator as eCreate 
 import messageEvents as mEvents
+import traceback
+
+# from cogs.utils import checks, context, db
+
+commands = (
+    'cogs.event'
+)
 
 
 load_dotenv()
@@ -28,8 +35,19 @@ async def on_command_error(ctx, error):
         await ctx.send('learn to type, boomer' + ' <:face:627141817678168064>')
     else:
         await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
-
+        traceback.print_exc()
+        await bot.logout()
  
+@bot.event
+async def on_message(ctx):
+    if ctx.author == bot.user:
+        return
+    print(str(ctx.author.id))
+    author = ctx.author.id 
+    # if author == '':
+    #     await ctx.send('go write your college apps')
+
+    await bot.process_commands(ctx)
     
 @bot.command()
 async def boomer(ctx, *arg):
@@ -76,7 +94,8 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         + 'Desciption: ' + desc)
     
     await ctx.send('event!')
-    await eCreate.splitMessage(ctx, date)
+
+    await mEvents.handleEvent(ctx, eCreate.parseDate(ctx, date), sTime, desc)
     print('event created!')
 
 @bot.command()
