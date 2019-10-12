@@ -95,7 +95,7 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     
     await ctx.send('event!')
 
-    await mEvents.handleEvent(ctx, eCreate.parseDate(ctx, date), sTime, desc)
+    await mEvents.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
     print('event created!')
 
 @bot.command()
