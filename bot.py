@@ -42,11 +42,13 @@ async def on_command_error(ctx, error):
 async def on_message(ctx):
     if ctx.author == bot.user:
         return
+    print('Author' + str(ctx.author))
     print(str(ctx.author.id))
     author = ctx.author.id 
-    # if author == '':
-    #     await ctx.send('go write your college apps')
-
+    if author == '355464236899631115':
+        await ctx.channel.send('go write your college apps')
+    # if str(author) == '285952812683362306':
+    #     await ctx.channel.send('dunkan')
     await bot.process_commands(ctx)
     
 @bot.command()
@@ -86,15 +88,12 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         await ctx.send('Too many details')
         return
 
-    await ctx.send('Event details: ' \
-        + 'Name: ' + title + '  ' \
-        + 'Date: ' + date + '  ' \
-        + 'Start time: ' + sTime + '  ' \
-        + 'End time: ' + eTime + '  ' \
-        + 'Desciption: ' + desc)
-    
-    await ctx.send('event!')
-
+    # await ctx.send('Event details: ' \
+    #     + 'Name: ' + title + '  ' \
+    #     + 'Date: ' + date + '  ' \
+    #     + 'Start time: ' + sTime + '  ' \
+    #     + 'End time: ' + eTime + '  ' \
+    #     + 'Desciption: ' + desc)
     await mEvents.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
     print('event created!')
 

@@ -9,7 +9,6 @@ boomerYes = 0
 async def handleEvent(ctx, title, date, sTime, eTime, desc): 
     global boomerYes
     global boomerNo
-    await ctx.send('event create')
     print('Create Event: ')
     print('Year: ' + date.get('Year'))
     print('Start Time: ' + sTime)
