@@ -42,8 +42,10 @@ async def on_command_error(ctx, error):
 async def on_message(ctx):
     if ctx.author == bot.user:
         return
-    print('Author' + str(ctx.author))
+    print('------------------------------------')
+    print('Author: ' + str(ctx.author))
     print(str(ctx.author.id))
+    print(ctx.content)
     author = ctx.author.id 
     if author == '355464236899631115':
         await ctx.channel.send('go write your college apps')
