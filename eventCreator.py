@@ -16,6 +16,7 @@ def parseDate(ctx, date):
         return date
     except:
         print('invalid date')
+        date = {}
 
     
 

@@ -38,6 +38,10 @@ async def on_command_error(ctx, error):
         traceback.print_exc()
         await bot.logout()
  
+async def getLastMessage(ctx):
+    await ctx.channel.send(str(ctx.channel.fetch_message(int(ctx.channel.last_message_id))))
+    return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
+
 @bot.event
 async def on_message(ctx):
     if ctx.author == bot.user:
@@ -46,10 +50,12 @@ async def on_message(ctx):
     print('Author: ' + str(ctx.author))
     print(str(ctx.author.id))
     print(ctx.content)
-    author = ctx.author.id 
+    # await ctx.channel.fetch_message(int(ctx.channel.last_message_id)).add_reaction('👍')
+    # await getLastMessage(ctx)
+    author = str(ctx.author.id) 
     if author == '355464236899631115':
-        await ctx.channel.send('go write your college apps')
-    # if str(author) == '285952812683362306':
+        await ctx.channel.send('go write your college apps <:face:627141817678168064>')
+    # if author == '285952812683362306':
     #     await ctx.channel.send('dunkan')
     await bot.process_commands(ctx)
     
@@ -97,7 +103,7 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'End time: ' + eTime + '  ' \
     #     + 'Desciption: ' + desc)
     await mEvents.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
-    print('event created!')
+
 
 @bot.command()
 async def bot_quit(ctx):
