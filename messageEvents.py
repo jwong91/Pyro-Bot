@@ -2,6 +2,8 @@ import discord as dc
 import random as rand
 import prepFuncts as fn
 import asyncio 
+import bot
+import emojiList as emoji
 
 boomerNo = 0
 boomerYes = 0
@@ -24,6 +26,8 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
     await ctx.send('Start Time: ' + sTime)
     await ctx.send('End Time: ' + eTime)
     await ctx.send('Description: ' + desc)
+
+    await bot.botLastMsg.add_reaction(emoji.aaronFace)
 
     print('Event created!')
 
