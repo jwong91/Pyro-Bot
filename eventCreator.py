@@ -7,16 +7,41 @@ boomerYes = 2
 # Separated by ':'
 
 def parseDate(ctx, date):
-    split = date.split('/')
-    try:
-        year = split[2]
-        month = split[1]
-        day = split[0]
-        date = {'Year': year, 'Month': month, 'Day': day}
-        return date
-    except:
-        print('invalid date')
-        date = {}
+    # split = date.split('/')
+    # try:
+    #     year = split[2]
+    #     month = split[1]
+    #     day = split[0]
+    #     date = {'Year': year, 'Month': month, 'Day': day}
+    #     return date
+    # except:
+    #     print('invalid date')
+    #     date = {}
+    return
+
+async def handleEvent(ctx, title, date, sTime, eTime, desc): 
+    # if date == None:
+    #     return
+    # print('Create Event: ')
+    # print('Year: ' + date.get('Year'))
+    # print('Start Time: ' + sTime)
+    # print('End Time: ' + eTime)
+    # print('Description: ' + desc)
+    # print('Creating event: Year: ' + date.get('Year'))
+
+    # await ctx.send('Event details:')
+    # await ctx.send('Title: ' + title)
+    # await ctx.send('Month: ' + date.get('Month'))
+    # await ctx.send('Day: ' + date.get('Day'))
+    # await ctx.send('Year: ' + date.get('Year'))
+    # await ctx.send('Start Time: ' + sTime)
+    # await ctx.send('End Time: ' + eTime)
+    # await ctx.send('Description: ' + desc)
+
+    # # await bot.botLastMsg.add_reaction(emoji.aaronFace)
+
+    # print('Event created!')
+    return
 
     
 

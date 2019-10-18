@@ -116,7 +116,7 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'Start time: ' + sTime + '  ' \
     #     + 'End time: ' + eTime + '  ' \
     #     + 'Desciption: ' + desc)
-    await mEvents.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
+    await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
 
 
 @bot.command()

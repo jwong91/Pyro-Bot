@@ -3,33 +3,12 @@ import random as rand
 import prepFuncts as fn
 import asyncio 
 import bot
-import emojiList as emoji
+# import emojiList as emoji
 
 boomerNo = 0
 boomerYes = 0
 
-async def handleEvent(ctx, title, date, sTime, eTime, desc): 
-    if date == None:
-        return
-    print('Create Event: ')
-    print('Year: ' + date.get('Year'))
-    print('Start Time: ' + sTime)
-    print('End Time: ' + eTime)
-    print('Description: ' + desc)
-    print('Creating event: Year: ' + date.get('Year'))
 
-    await ctx.send('Event details:')
-    await ctx.send('Title: ' + title)
-    await ctx.send('Month: ' + date.get('Month'))
-    await ctx.send('Day: ' + date.get('Day'))
-    await ctx.send('Year: ' + date.get('Year'))
-    await ctx.send('Start Time: ' + sTime)
-    await ctx.send('End Time: ' + eTime)
-    await ctx.send('Description: ' + desc)
-
-    await bot.botLastMsg.add_reaction(emoji.aaronFace)
-
-    print('Event created!')
 
 
 
