@@ -39,15 +39,6 @@ async def handleBoomercount(ctx):
     await ctx.send('yes: ' + str(boomerYes))
     await ctx.send('no: ' + str(boomerNo))
 
-@asyncio.coroutine
-# async def createEvent(ctx, date, time, desc): 
-#     await ctx.send('event create')
-#     print('Create Event: ')
-#     print(str(date))
-#     print(time)
-#     print(desc)
-#     print('Creating event: Year: ' + date.get('Year'))
-
 
 def parseDate(ctx, date):
     print('parsedate')
@@ -58,8 +49,3 @@ def parseDate(ctx, date):
     date = {'Year': year, 'Month': month, 'Day': day}
     return str(date)
 
-def argFunc(val):
-    return val
-
-def testFunc(value):
-    print('val: ' + value)

@@ -48,7 +48,7 @@ async def on_message(ctx):
 
     print('------------------------------------')
     print('Author: ' + str(ctx.author))
-    print(str(ctx.author.id))
+    print('ID: ' + str(ctx.author.id))
     print(ctx.content)
     print('------------------------------------')
 
@@ -117,6 +117,9 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'End time: ' + eTime + '  ' \
     #     + 'Desciption: ' + desc)
     await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
+    await botLastMsg.add_reaction('👍')
+    await botLastMsg.add_reaction('👎')
+
 
 
 @bot.command()
