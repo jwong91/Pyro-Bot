@@ -14,6 +14,8 @@ import eventList
 #Init 
 #TODO: add event via calendar api, add list event bot command 
 #TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
+#! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day) 
+#! event input, cont.: start hour, start minute, end hour, end minute  
 
 commands = (
     'cogs.event'
