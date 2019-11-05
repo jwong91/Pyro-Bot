@@ -1,1 +1,2 @@
-# aaronFace = '👍'
+thumbsUp = '👍'
+thumbsDown = '👎'

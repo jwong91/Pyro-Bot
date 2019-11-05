@@ -8,21 +8,26 @@ import prepFuncts as fn
 import eventCreator as eCreate 
 import messageEvents as mEvents
 import traceback
+import emojiList as emoji
+import eventList
 
-# from cogs.utils import checks, context, db
+#Init 
+#TODO: add event via calendar api, add list event bot command 
+#TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 
 commands = (
     'cogs.event'
 )
 
+botLastMsg = None
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-BOT_PREFIX = ('?') #Eventually put this into a config/.env file
+BOT_PREFIX = ('?') #Eventually put this into a config file
 
 bot = c.Bot(command_prefix=(BOT_PREFIX))
 
-
+#Bot code
 
 @bot.event
 async def on_ready():
@@ -38,7 +43,6 @@ async def on_command_error(ctx, error):
         traceback.print_exc()
         await bot.logout()
  
-
 @bot.event
 async def on_message(ctx):
     if ctx.author == bot.user:
@@ -61,9 +65,13 @@ async def on_message(ctx):
     
 async def getLastMessage(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
-    lastMessage = lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
-    return lastMessage
+    return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
+     
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
+
+@bot.command()
+async def listEvents(ctx):
+    print(eventList.eventList)
 
 @bot.command()
 async def test(ctx):
@@ -117,8 +125,8 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'End time: ' + eTime + '  ' \
     #     + 'Desciption: ' + desc)
     await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
-    await botLastMsg.add_reaction('👍')
-    await botLastMsg.add_reaction('👎')
+    await botLastMsg.add_reaction(emoji.thumbsUp)
+    await botLastMsg.add_reaction(emoji.thumbsDown)
 
 
 
