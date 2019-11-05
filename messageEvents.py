@@ -9,9 +9,6 @@ boomerNo = 0
 boomerYes = 0
 
 
-
-
-
 async def handleBoomer(ctx, author, mentionedUser, *arg):
     global boomerNo
     global boomerYes
@@ -40,12 +37,4 @@ async def handleBoomercount(ctx):
     await ctx.send('no: ' + str(boomerNo))
 
 
-def parseDate(ctx, date):
-    print('parsedate')
-    split = date.split('/')
-    year = split[2]
-    month = split[1]
-    day = split[0]
-    date = {'Year': year, 'Month': month, 'Day': day}
-    return str(date)
 

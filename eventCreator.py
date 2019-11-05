@@ -1,8 +1,9 @@
-import discord as dc 
+import discord as dc
+import eventList 
+# import calendarInterface 
 
+# calendarInterface.createCalEvent('test', 'date', 'time', 'time1', 'descHere')
 
-boomerNo = 1
-boomerYes = 2
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
@@ -17,6 +18,25 @@ def parseDate(ctx, date):
     except:
         print('invalid date')
         date = {}
+
+    
+def verifyTime(sTime, eTime):
+    if (type(sTime) != int or sTime > 12 or
+        type(eTime) != int or eTime > 12):
+        return False
+    else:
+        return True
+
+def createDateTime(date, sTime, eTime):
+    # if verifyTime(sTime, eTime):
+        # Create a datetime that looks like YYYY-MM-DDTHH:MM:SS
+    startDatetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
+                    + sTime + ':' + '00']
+    endDatetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
+                    + eTime + ':' + '00']
+
+    print(startDatetime)
+    print(endDatetime)
 
 
 async def handleEvent(ctx, title, date, sTime, eTime, desc): 
@@ -38,7 +58,8 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
     await ctx.send('End Time: ' + eTime)
     await ctx.send('Description: ' + desc)
 
-    # await bot.botLastMsg.add_reaction(emoji.aaronFace)
+    #add event via google calendar API
+    
 
     print('Event created!')
 
@@ -54,5 +75,6 @@ async def parseEventInput(ctx, input): #Parses string into date, time, and descr
     await ctx.send(sTime + eTime + date + description)
     return sTime, eTime, date, description
 
+createDateTime({'Year': '2323', 'Month': '03', 'Day': '11'}, '2', '5')
 
     
