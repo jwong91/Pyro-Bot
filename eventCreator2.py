@@ -8,20 +8,20 @@ import datetime
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
-# def parseDate(ctx, date):
-#     split = date.split('/')
-#     try:
-#         if len(split) == 2:
-#             split.extend(datetime.now().day)
+def parseDate(ctx, date):
+    split = date.split('/')
+    try:
+        if len(split) == 2:
+            split.extend(datetime.now().day)
             
-#         year = split[2]
-#         month = split[1]
-#         day = split[0]
-#         date = {'Year': year, 'Month': month, 'Day': day}
-#         return date
-#     except:
-#         print('invalid date')
-#         date = {}
+        year = split[2]
+        month = split[1]
+        day = split[0]
+        date = {'Year': year, 'Month': month, 'Day': day}
+        return date
+    except:
+        print('invalid date')
+        date = {}
 
     
 def verifyTime(time):
