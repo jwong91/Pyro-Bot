@@ -14,6 +14,7 @@ import eventList
 #Init 
 #TODO: add event via calendar api, add list event bot command 
 #TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
+#TODO: add error catching
 #! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day) 
 #! event input, cont.: start hour, start minute, end hour, end minute  
 
@@ -126,11 +127,13 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'Start time: ' + sTime + '  ' \
     #     + 'End time: ' + eTime + '  ' \
     #     + 'Desciption: ' + desc)
+
     await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
-    await botLastMsg.add_reaction(emoji.thumbsUp)
-    await botLastMsg.add_reaction(emoji.thumbsDown)
-
-
+    try:   #! can remove if bot sends a welcome message
+        await botLastMsg.add_reaction(emoji.thumbsUp)
+        await botLastMsg.add_reaction(emoji.thumbsDown)
+    except:
+        print('ERROR: No valid bot msg')
 
 @bot.command()
 async def bot_quit(ctx):
