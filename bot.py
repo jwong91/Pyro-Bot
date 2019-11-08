@@ -135,9 +135,10 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     except:
         print('ERROR: No valid bot msg')
 
-@bot.command()
+@bot.command(name='quit')
 async def bot_quit(ctx):
     await ctx.send('Bot is shutting down')
     await bot.logout()
+    
 
 bot.run(token)

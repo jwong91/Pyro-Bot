@@ -27,12 +27,28 @@ def verifyTime(time):
         print('Valid time')
         return True
 
+def verifyDate(date):
+    if len(date) > 3:
+        print('Invalid date')
+        return False
+
+    try:
+        for val in date:
+            val = int(val)
+            return True
+    except:
+        print('Date contains non-integer values')
+        return False
+
 
 def parseDate(ctx, date):
     split = date.split('/')
     if len(split) < 3:
             split.append(str(datetime.now().year))
             print(split)
+
+    if not verifyDate(split):
+        return
 
     try:
         year = split[2]
@@ -42,7 +58,7 @@ def parseDate(ctx, date):
         return date
     except:
         print('invalid date')
-        date = {}
+        return False
 
     
 def createDateTime(date, sTime, eTime):
@@ -58,7 +74,7 @@ def createDateTime(date, sTime, eTime):
 
 
 async def handleEvent(ctx, title, date, sTime, eTime, desc): 
-    if date == None:
+    if not date:
         return
 
     print('Create Event: ')
