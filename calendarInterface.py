@@ -51,13 +51,16 @@ for event in events:
     print(start, event['summary'])
 
 
-def createCalEvent(title, date, start, end, desc):
+def createCalEvent(title, datetime, desc):
     event = {
         'summary': title,
         'description': desc,
         'start': {'dateTime': '2019-11-28T17:00:00', 'timeZone': 'America/New_York'},
         'end': {'dateTime': '2019-11-28T17:09:00', 'timeZone': 'America/New_York'}
         }
+    print(title)
+    print(desc)
+    print(datetime)
 
     event = service.events().insert(calendarId='primary', body=event).execute()
 

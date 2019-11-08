@@ -15,6 +15,7 @@ import eventList
 #TODO: add event via calendar api, add list event bot command 
 #TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 #TODO: add error catching
+#TODO: implement verifyTime
 #! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day) 
 #! event input, cont.: start hour, start minute, end hour, end minute  
 
@@ -139,6 +140,6 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
 async def bot_quit(ctx):
     await ctx.send('Bot is shutting down')
     await bot.logout()
-    
+
 
 bot.run(token)
