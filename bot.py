@@ -10,12 +10,14 @@ import messageEvents as mEvents
 import traceback
 import emojiList as emoji
 import eventList
+import calendarInterface as calendar
 
 #Init 
 #TODO: add event via calendar api, add list event bot command 
 #TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 #TODO: add error catching
 #TODO: implement verifyTime
+#TODO: get multiword user input
 #! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day) 
 #! event input, cont.: start hour, start minute, end hour, end minute  
 
@@ -45,7 +47,7 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
         traceback.print_exc()
-        await bot.logout()
+        # await bot.logout()
  
 @bot.event
 async def on_message(ctx):
@@ -135,6 +137,11 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         await botLastMsg.add_reaction(emoji.thumbsDown)
     except:
         print('ERROR: No valid bot msg')
+
+@bot.command(name='listAllEvents')
+async def listEvents(ctx):
+    await calendar.listAllEvents(ctx)
+    await ctx.send('Getting all events...')
 
 @bot.command(name='quit')
 async def bot_quit(ctx):

@@ -1,7 +1,7 @@
 import discord as dc
 import eventList 
 from datetime import datetime
-import calendarInterface 
+import calendarInterface as calendar
 
 # calendarInterface.createCalEvent('test', 'date', 'time', 'time1', 'descHere')
 
@@ -96,6 +96,6 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
 
 
     #add event via google calendar API
-    calendarInterface.createCalEvent(title, createDateTime(date, sTime, eTime), desc)
+    calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc)
 
     print('Event created!')

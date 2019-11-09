@@ -65,6 +65,20 @@ def createCalEvent(title, dateTime, desc):
     print(type(dateTime[1]))
     print(dateTime[1])
 
-    event = service.events().insert(calendarId='primary', body=event).execute()
+    try:
+        event = service.events().insert(calendarId='primary', body=event).execute()
+    except:
+        print('There was an error when trying to add the event to the calendar')
 
+async def listAllEvents(ctx):
+    events_result = service.events().list(calendarId='primary',  # pylint: disable=no-member
+                                    singleEvents=True,
+                                    orderBy='startTime').execute()
+    events = events_result.get('items', [])
+    await ctx.send('test')
 
+    if not events:
+        await ctx.send('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        await ctx.send(start + '  ' + event['summary'])
