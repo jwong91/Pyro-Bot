@@ -52,8 +52,8 @@ def parseDate(ctx, date):
 
     try:
         year = split[2]
-        month = split[1]
-        day = split[0]
+        month = split[0]
+        day = split[1]
         date = {'Year': year, 'Month': month, 'Day': day}
         return date
     except:
@@ -69,8 +69,8 @@ def createDateTime(date, sTime, eTime):
     endDatetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
                     + eTime + ':' + '00']
 
-    print(startDatetime)
-    print(endDatetime)
+    # print(startDatetime)
+    # print(endDatetime)
     return startDatetime, endDatetime
 
 
@@ -93,6 +93,7 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
     await ctx.send('Start Time: ' + sTime)
     await ctx.send('End Time: ' + eTime)
     await ctx.send('Description: ' + desc)
+
 
     #add event via google calendar API
     calendarInterface.createCalEvent(title, createDateTime(date, sTime, eTime), desc)
