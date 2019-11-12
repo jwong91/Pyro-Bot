@@ -3,3 +3,6 @@
 __pycache__
 credentials.json
 token.pickle
+__pycache__/messageEvents.cpython-36.pyc
+__pycache__/prepFuncts.cpython-36.pyc
+__pycache__/eventCreator.cpython-36.pyc
