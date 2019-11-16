@@ -1,22 +1,22 @@
 import discord as dc 
 
-def parsePoll(input):
+def parsePoll(ctx, input):
     title = input[0]
     del input[0]
 
     parsed = {'Title': title, 'Options': input}
     return parsed
 
-def createPoll(usrInput):
+async def createPoll(ctx, usrInput):
+    i = 0
     #!Pass input to parse in list
-    parsedInput = parsePoll(usrInput)
-    print('Poll Title: ' + parsedInput.title)
+    parsedInput = parsePoll(ctx, usrInput) #! This is the dict parsed
+    print('Poll Title: ' + parsedInput['Title'])
     print('')
     
-    i = 0
-    for option in usrInput.Options:
+    for option in parsedInput['Options']:
         i += 1
-        print('Option' + i + ': ' + option)
+        print('Option' + str(i) + ': ' + option)
 
 
-print(createPoll(['title', 'op1', 'op2', 'op3']))
+# print(createPoll(['this is a title', 'op1', 'op2', 'op3']))

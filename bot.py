@@ -7,6 +7,7 @@ from discord.ext.commands import CommandNotFound
 import prepFuncts as fn
 # import eventCreator 
 import messageEvents as mEvents
+import polls 
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -47,7 +48,12 @@ async def boomercount(ctx, arg='()'):
     await mEvents.handleBoomercount(ctx)
 
 
-
-
+@bot.command(name='poll')
+async def createPoll(ctx, *arg):
+    details = []
+    for arg in arg:
+        details = details[arg]
+        print(details)
+    await polls.createPoll(ctx, details)
 
 bot.run(token)
