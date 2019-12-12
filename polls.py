@@ -7,15 +7,15 @@ def parsePoll(ctx, input):
     parsed = {'Title': title, 'Options': input}
     return parsed
 
-def createPoll(ctx, usrInput):
+async def createPoll(ctx, usrInput):
     i = 0
     #!Pass input to parse in list
     parsedInput = parsePoll(ctx, usrInput) #! This is the dict parsed
-    print('Poll Title: ' + parsedInput['Title'])
+    await ctx.send('Poll Title: ' + parsedInput['Title'])
     
     for option in parsedInput['Options']:
         i += 1
-        print('Option' + str(i) + ': ' + option)
+        await ctx.send('Option' + str(i) + ': ' + option)
 
 
-createPoll('ctx', ['this is a title', 'op1', 'op2', 'op3'])
+# createPoll('ctx', ['this is a title', 'op1', 'op2', 'op3'])

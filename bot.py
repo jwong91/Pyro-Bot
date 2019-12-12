@@ -48,12 +48,17 @@ async def boomercount(ctx, arg='()'):
     await mEvents.handleBoomercount(ctx)
 
 
-@bot.command(name='poll')
-async def createPoll(ctx, *arg):
-    details = []
-    for arg in arg:
-        details = details[arg]
-        print(details)
+@bot.command()
+async def createPoll(ctx, title, op1, op2, *op3):
+    print('poll create')
+    if title and op1 and op2 != None:
+        details = [title, op1, op2, *op3]
+    else:
+        ctx.send("Please specify a title and at least two choices.")
+    #     print(arg)
+    # for item in arg: 
+    #     details = details.append('item')
+    #     print(details)
     await polls.createPoll(ctx, details)
 
 bot.run(token)
