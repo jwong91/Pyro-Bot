@@ -12,14 +12,13 @@ import emojiList as emoji
 import eventList
 import calendarInterface as calendar
 
-#Init 
-#TODO: add event via calendar api, add list event bot command 
-#TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
-#TODO: add error catching
-#TODO: implement verifyTime
-#TODO: get multiword user input
-#! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day) 
-#! event input, cont.: start hour, start minute, end hour, end minute  
+# TODO: add event via calendar api, add list event bot command
+# TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
+# TODO: add error catching
+# TODO: implement verifyTime
+# TODO: get multi word user input
+# ! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day)
+# ! event input, cont.: start hour, start minute, end hour, end minute
 
 commands = (
     'cogs.event'
@@ -29,15 +28,17 @@ botLastMsg = None
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-BOT_PREFIX = ('?') #Eventually put this into a config file
+BOT_PREFIX = '?' # Eventually put this into a config file
 
-bot = c.Bot(command_prefix=(BOT_PREFIX))
+bot = c.Bot(command_prefix=BOT_PREFIX)
 
-#Bot code
+# Bot code
+
 
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
+
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -48,7 +49,8 @@ async def on_command_error(ctx, error):
         await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
         traceback.print_exc()
         # await bot.logout()
- 
+
+
 @bot.event
 async def on_message(ctx):
     if ctx.author == bot.user:
@@ -68,16 +70,14 @@ async def on_message(ctx):
     # if author == '285952812683362306':
     #     await ctx.channel.send('dunkan')
     await bot.process_commands(ctx)
-    
+
+
 async def getLastMessage(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
     return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
      
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
 
-@bot.command()
-async def listEvents(ctx):
-    print(eventList.eventList)
 
 @bot.command()
 async def test(ctx):
@@ -86,6 +86,7 @@ async def test(ctx):
     await ctx.send('emote this msg')
     print(botLastMsg.content)
     await botLastMsg.add_reaction('👍')
+
 
 @bot.command()
 async def boomer(ctx, *arg):
@@ -97,18 +98,20 @@ async def boomer(ctx, *arg):
     await mEvents.handleBoomer(ctx, author, mentionedUser, *arg)
     print(ctx.author.id)
 
+
 @bot.command()
 async def boomercount(ctx, arg='()'):
     if arg != '()':
         return
     await mEvents.handleBoomercount(ctx)
 
+
 @bot.command()
 async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', lengthCatcher='()'):
     if title == '()':
         await ctx.send('Missing a title')
         return
-    if date =='()':
+    if date == '()':
         await ctx.send('Missing a date')
         return
     if sTime == '()':
@@ -129,19 +132,21 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
     #     + 'Date: ' + date + '  ' \
     #     + 'Start time: ' + sTime + '  ' \
     #     + 'End time: ' + eTime + '  ' \
-    #     + 'Desciption: ' + desc)
+    #     + 'Description: ' + desc)
 
     await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
-    try:   #! can remove if bot sends a welcome message
+    try:   # ! can remove if bot sends a welcome message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
     except:
         print('ERROR: No valid bot msg')
 
+
 @bot.command(name='listAllEvents')
 async def listEvents(ctx):
-    await calendar.listAllEvents(ctx)
     await ctx.send('Getting all events...')
+    await calendar.listAllEvents(ctx)
+
 
 @bot.command(name='quit')
 async def bot_quit(ctx):
