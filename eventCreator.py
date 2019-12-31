@@ -73,6 +73,9 @@ def createDateTime(date, sTime, eTime):
     # print(endDatetime)
     return startDatetime, endDatetime
 
+def makeReadableDateTime(dateTime):
+    print(type(dateTime))
+
 
 async def handleEvent(ctx, title, date, sTime, eTime, desc): 
     if not date:

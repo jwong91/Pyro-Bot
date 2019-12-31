@@ -5,20 +5,28 @@ from discord.ext.commands import Bot
 from discord.ext import commands as c
 from discord.ext.commands import CommandNotFound
 import prepFuncts as fn
-import eventCreator as eCreate 
+import eventCreator as eCreate
 import messageEvents as mEvents
 import traceback
-import emojiList as emoji
+import emojiList as emoji   
 import eventList
 import calendarInterface as calendar
 
-# TODO: add event via calendar api, add list event bot command
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
-# TODO: add error catching
 # TODO: implement verifyTime
 # TODO: get multi word user input
+
+# TODO: Write function to unpack dateTime
+# TODO: Add rsvp (2 commands- add rsvp and remove rsvp)
+# TODO: Add delete event command
+# TODO: Add get x upcoming events command
+# TODO: Write help command
+# TODO: Add search for event command
+# TODO: General cleanup
+# TODO: Add edit event command
+
 # ! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day)
-# ! event input, cont.: start hour, start minute, end hour, end minute
+# ! start hour, start minute, end hour, end minute
 
 commands = (
     'cogs.event'
@@ -31,8 +39,6 @@ token = os.getenv('DISCORD_TOKEN')
 BOT_PREFIX = '?' # Eventually put this into a config file
 
 bot = c.Bot(command_prefix=BOT_PREFIX)
-
-# Bot code
 
 
 @bot.event
