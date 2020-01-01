@@ -2,9 +2,11 @@ from __future__ import print_function
 import datetime
 import pickle
 import os.path
+import eventCreator as eCreate
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+import traceback
 
 
 # If modifying these scopes, delete the file token.pickle.
@@ -67,18 +69,25 @@ def createCalEvent(title, dateTime, desc):
 
     try:
         event = service.events().insert(calendarId='primary', body=event).execute()
+        print('Event created!')
     except:
+        traceback.print_exc()
         print('There was an error when trying to add the event to the calendar')
 
 async def listAllEvents(ctx):
+    eventList = ''
+    eventDetails = {}
     events_result = service.events().list(calendarId='primary',  # pylint: disable=no-member
                                     singleEvents=True,
                                     orderBy='startTime').execute()
     events = events_result.get('items', [])
-    await ctx.send('test')
 
     if not events:
         await ctx.send('No upcoming events found.')
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        await ctx.send(start + '  ' + event['summary'])
+        title = event['summary']
+        eventDetails = eCreate.makeReadableDateTime(start)
+        eventList = eventList + 'Title: ' + title + '\n' + 'Time and Date: ' + start + '\n \n'
+    await ctx.send(eventList)
+    print(eventList)
