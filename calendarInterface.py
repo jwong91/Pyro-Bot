@@ -2,6 +2,7 @@ from __future__ import print_function
 import datetime
 import pickle
 import os.path
+import discord as dc
 import eventCreator as eCreate
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -85,9 +86,9 @@ async def listAllEvents(ctx):
         if not events:
             await ctx.send('No upcoming events found.')
         for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
+            rawEventDateTime = event['start'].get('dateTime', event['start'].get('date'))
             title = event['summary']
-            eventDetails = eCreate.makeReadableDateTime(start)
+            eventDetails = eCreate.makeReadableDateTime(rawEventDateTime)
             date = eventDetails[0]
             time = eventDetails[1]
             eventList = eventList + 'Title: ' + title + '\n' \
@@ -97,3 +98,15 @@ async def listAllEvents(ctx):
         print(eventList)
     except:
         traceback.print_exc()
+
+async def rsvp(ctx):
+    try: # If it fails, that means that this request was likely placed from a DM
+        guest = ctx.guild.get_member(ctx.author.id).nick
+        await ctx.send('you are ' + guest)
+    except: 
+        # do dm stuff here
+        print('mission failed')
+        traceback.print_exc()
+    # print(type(guest))
+    # event = service.events().get(calendarId='primary', eventId=ctx.execute() #! might be a message obj
+    # updated_event = service.events().update(calendarId='primary', eventId=event['id'], ).execute()

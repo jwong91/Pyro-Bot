@@ -17,16 +17,16 @@ import calendarInterface as calendar
 # TODO: get multi word user input
 
 # TODO: Add formatting to outputs of listAllEvents, etc.
-# TODO: Add rsvp (2 commands- add rsvp and remove rsvp)*
+# TODO: Add rsvp (2 commands- add rsvp and remove rsvp)*^
 # TODO: Add delete event command
 # TODO: Add get x upcoming events command
 # TODO: Write help command
 # TODO: Add search for event command
-# TODO: General cleanup
+# TODO: General cleanup^
 # TODO: Add edit event command*
-# TODO: Make listEvent list to have the next event at the bottom
-# TODO: Allow for 2 digit years (i.e. 19 = 2019)*
-# TODO: Allow for 12h time input*
+# TODO: Make listEvent list to have the next event at the bottom^
+# TODO: Allow for 2 digit years (i.e. 19 = 2019)*^
+# TODO: Allow for 12h time input*^
 
 # ! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day)
 # ! start hour, start minute, end hour, end minute
@@ -156,6 +156,9 @@ async def listEvents(ctx):
     await ctx.send('Getting all events...')
     await calendar.listAllEvents(ctx)
 
+@bot.command()
+async def rsvp(ctx):
+    await calendar.rsvp(ctx)
 
 @bot.command(name='quit')
 async def bot_quit(ctx):
