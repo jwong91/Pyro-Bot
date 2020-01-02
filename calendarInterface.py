@@ -81,13 +81,19 @@ async def listAllEvents(ctx):
                                     singleEvents=True,
                                     orderBy='startTime').execute()
     events = events_result.get('items', [])
-
-    if not events:
-        await ctx.send('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        title = event['summary']
-        eventDetails = eCreate.makeReadableDateTime(start)
-        eventList = eventList + 'Title: ' + title + '\n' + 'Time and Date: ' + start + '\n \n'
-    await ctx.send(eventList)
-    print(eventList)
+    try:
+        if not events:
+            await ctx.send('No upcoming events found.')
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            title = event['summary']
+            eventDetails = eCreate.makeReadableDateTime(start)
+            date = eventDetails[0]
+            time = eventDetails[1]
+            eventList = eventList + 'Title: ' + title + '\n' \
+                        + 'Date: ' + eventDetails[0] + '\n' \
+                        + 'Time: ' + time['start'] + '-' + time['end'] + '\n \n'
+        await ctx.send(eventList)
+        print(eventList)
+    except:
+        traceback.print_exc()

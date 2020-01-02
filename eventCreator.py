@@ -74,14 +74,16 @@ def createDateTime(date, sTime, eTime):
     return startDatetime, endDatetime
 
 def makeReadableDateTime(dateTime):
-    date = {}
     split = dateTime.split('T')
-    splitDate = split[0].split('-')
-    splitDate[0], splitDate[1] = splitDate[1], splitDate[0]
-    splitDate[1], splitDate[2] = splitDate[2], splitDate[1]
+    date = split[0].split('-')
+    date[0], date[1] = date[1], date[0]
+    date[1], date[2] = date[2], date[1]
+    date = ('/').join(date)
     
     time = {'start' : split[1].split('-')[0], 'end' : split[1].split('-')[1]}
-    print(time)
+    time['start'] = time['start'][:-2]
+    
+    return date, time
 
 async def handleEvent(ctx, title, date, sTime, eTime, desc): 
     if not date:

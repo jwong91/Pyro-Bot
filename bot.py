@@ -16,7 +16,7 @@ import calendarInterface as calendar
 # TODO: implement verifyTime
 # TODO: get multi word user input
 
-# TODO: Write function to unpack dateTime
+# TODO: Add formatting to outputs of listAllEvents, etc.
 # TODO: Add rsvp (2 commands- add rsvp and remove rsvp)*
 # TODO: Add delete event command
 # TODO: Add get x upcoming events command
