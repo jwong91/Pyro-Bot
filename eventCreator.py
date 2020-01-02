@@ -2,11 +2,13 @@ import discord as dc
 import eventList 
 from datetime import datetime
 import calendarInterface as calendar
+import traceback
 
 # calendarInterface.createCalEvent('test', 'date', 'time', 'time1', 'descHere')
 
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
+
 
 def verifyTime(time):
     try:
@@ -81,7 +83,7 @@ def makeReadableDateTime(dateTime):
     date = ('/').join(date)
     
     time = {'start' : split[1].split('-')[0], 'end' : split[1].split('-')[1]}
-    time['start'] = time['start'][:-2]
+    time['start'] = time['start'][:-3]
     
     return date, time
 
