@@ -38,7 +38,6 @@ if not creds or not creds.valid:
 
 service = build('calendar', 'v3', credentials=creds)
 
-
 # Call the Calendar API
 now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 print('Getting the upcoming 10 events')
@@ -52,6 +51,14 @@ if not events:
 for event in events:
     start = event['start'].get('dateTime', event['start'].get('date'))
     print(start, event['summary'])
+
+def getEventIdBySummary(desiredEventSummary):
+    events_result = service.events().list(calendarId='primary',  # pylint: disable=no-member
+                                    singleEvents=True,
+                                    orderBy='startTime').execute()
+    events = events_result.get('items', [])
+    for event in events:
+        pass # WIP
 
 
 def createCalEvent(title, dateTime, desc):
@@ -99,14 +106,20 @@ async def listAllEvents(ctx):
     except:
         traceback.print_exc()
 
-async def rsvp(ctx):
-    try: # If it fails, that means that this request was likely placed from a DM
+async def rsvp(ctx, eventID):
+    try: # If it fails, that means that this request was placed from a DM
         guest = ctx.guild.get_member(ctx.author.id).nick
-        await ctx.send('you are ' + guest)
     except: 
         # do dm stuff here
         print('mission failed')
         traceback.print_exc()
-    # print(type(guest))
-    # event = service.events().get(calendarId='primary', eventId=ctx.execute() #! might be a message obj
-    # updated_event = service.events().update(calendarId='primary', eventId=event['id'], ).execute()
+    await ctx.send('You want to rsvp for ' + eventID + ' as ' + guest)
+    try:
+        event = service.events().get(calendarId='primary', summary=eventID).execute()
+    except:
+        traceback.print_exc()
+        return
+    try:
+        updated_event = service.events().update(calendarId='primary', eventId=event['id'], body=event).execute()
+    except:
+        traceback.print_exc()
