@@ -6,3 +6,4 @@ __pycache__/prepFuncts.cpython-36.pyc
 __pycache__/eventCreator.cpython-36.pyc
 credentials.json
 token.pickle
+.idea/
