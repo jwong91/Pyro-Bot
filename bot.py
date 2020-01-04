@@ -27,6 +27,14 @@ import calendarInterface as calendar
 # TODO: Make listEvent list to have the next event at the bottom^
 # TODO: Allow for 2 digit years (i.e. 19 = 2019)*^
 # TODO: Allow for 12h time input*^
+# TODO: Fix bug that doesn't output event times correctly
+
+# RSVP implementation:
+# Emoji based
+# On event creation, new event ID is the summary - IS NOW MESSAGE ID
+# To handle duplicate events, the new event ID is event name + date OR the id of the message
+# On emote, check if the message is an event creation message
+# If yes, get the summary and search the google api for that
 
 # ! Event input looks like this, with '()' meaning optional: (year), start month, start day, (end month), (end day)
 # ! start hour, start minute, end hour, end minute
@@ -36,12 +44,13 @@ commands = (
 )
 
 botLastMsg = None
+userLastMsg = None
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 BOT_PREFIX = '?' # Eventually put this into a config file
 
-bot = c.Bot(command_prefix=BOT_PREFIX)
+bot = c.Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
 
 
 @bot.event
@@ -55,10 +64,13 @@ async def on_command_error(ctx, error):
     if ctx.message.content in fn.boomerMisspellings:
         await ctx.send('learn to type, boomer' + ' <:face:627141817678168064>')
     else:
-        await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
         traceback.print_exc()
+        await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
         # await bot.logout()
 
+@bot.event
+async def on_error(error, *args, **kwargs):
+    traceback.print_exc()
 
 @bot.event
 async def on_message(ctx):
@@ -66,6 +78,9 @@ async def on_message(ctx):
         global botLastMsg
         botLastMsg = ctx
         return
+    else:
+        global userLastMsg
+        userLastMsg = ctx
 
     print('------------------------------------')
     print('Author: ' + str(ctx.author))
@@ -75,10 +90,16 @@ async def on_message(ctx):
 
     author = str(ctx.author.id)
     if author == '355464236899631115':
-        await ctx.channel.send('go write your college apps <:face:627141817678168064>')
+        await ctx.channel.send('_ _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n_ _')
+
     # if author == '285952812683362306':
     #     await ctx.channel.send('dunkan')
     await bot.process_commands(ctx)
+
+@bot.event
+async def on_reaction_add(reaction, usr):
+    print('reaction detected!')
+    print('reaction ' + ' was added by ' + str(usr.id))
 
 
 async def getLastMessage(ctx):
@@ -86,7 +107,6 @@ async def getLastMessage(ctx):
     return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
      
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
-
 
 @bot.command()
 async def test(ctx):
@@ -136,14 +156,9 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         await ctx.send('Too many details')
         return
 
-    # await ctx.send('Event details: ' \
-    #     + 'Name: ' + title + '  ' \
-    #     + 'Date: ' + date + '  ' \
-    #     + 'Start time: ' + sTime + '  ' \
-    #     + 'End time: ' + eTime + '  ' \
-    #     + 'Description: ' + desc)
+    eventId = str(userLastMsg.id)
 
-    await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
+    await eCreate.handleEvent(ctx, eventId, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
     try:   # ! can remove if bot sends a welcome message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
@@ -157,8 +172,12 @@ async def listEvents(ctx):
     await calendar.listAllEvents(ctx)
 
 @bot.command()
-async def rsvp(ctx):
-    await calendar.rsvp(ctx)
+async def rsvp(ctx, desiredEvent=None):
+    if not desiredEvent:
+        await ctx.send('Please enter an event that you wish to RSVP for.')
+        return
+    
+    await calendar.rsvp(ctx, desiredEvent)
 
 @bot.command(name='quit')
 async def bot_quit(ctx):

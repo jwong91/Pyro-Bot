@@ -87,7 +87,7 @@ def makeReadableDateTime(dateTime):
     
     return date, time
 
-async def handleEvent(ctx, title, date, sTime, eTime, desc): 
+async def handleEvent(ctx, eventId, title, date, sTime, eTime, desc): 
     if not date:
         return
 
@@ -109,4 +109,12 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
 
 
     #add event via google calendar API
-    calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc)
+    calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId)
+    try:
+        with open('eventIds.txt', mode='a+') as idList:
+            idList.write(str(eventId) + '\n')
+            print(idList.read())
+    except:
+        traceback.print_exc()
+    finally:
+        idList.close()
