@@ -97,9 +97,9 @@ async def on_message(ctx):
     await bot.process_commands(ctx)
 
 @bot.event
-async def on_reaction_add(reaction, usr):
+async def on_raw_reaction_add(ctx):
     print('reaction detected!')
-    print('reaction ' + ' was added by ' + str(usr.id))
+    print('reaction ' + ' was added by ' + str(ctx.user_id))
 
 
 async def getLastMessage(ctx):
