@@ -11,6 +11,8 @@ import traceback
 import emojiList as emoji   
 import eventList
 import calendarInterface as calendar
+from time import sleep
+import event as ev
 
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 # TODO: implement verifyTime
@@ -77,6 +79,7 @@ async def on_message(ctx):
     if ctx.author == bot.user:
         global botLastMsg
         botLastMsg = ctx
+        eCreate.updateBotLastMsg(ctx)
         return
     else:
         global userLastMsg
@@ -100,6 +103,17 @@ async def on_message(ctx):
 async def on_raw_reaction_add(ctx):
     print('reaction detected!')
     print('reaction ' + ' was added by ' + str(ctx.user_id))
+
+    guest = ctx.user_id
+    try:
+        with open('eventIds.txt', mode='r') as idList:
+            eventId = str(ctx.message_id)
+            if eventId in idList:
+                calendar.addRsvp(ctx, eventId, guest)
+    except:
+        traceback.print_exc()
+    finally:
+        idList.close()
 
 
 async def getLastMessage(ctx):
@@ -156,10 +170,13 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         await ctx.send('Too many details')
         return
 
-    eventId = str(userLastMsg.id)
+    try:
+        await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
+    except:
+        traceback.print_exc()
 
-    await eCreate.handleEvent(ctx, eventId, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
     try:   # ! can remove if bot sends a welcome message
+        sleep(0.5) # Sometimes it doesn't emote the last message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
     except:

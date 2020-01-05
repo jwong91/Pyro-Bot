@@ -9,6 +9,7 @@ import traceback
 #Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
+botLastMsg = None
 
 def verifyTime(time):
     try:
@@ -87,7 +88,11 @@ def makeReadableDateTime(dateTime):
     
     return date, time
 
-async def handleEvent(ctx, eventId, title, date, sTime, eTime, desc): 
+def updateBotLastMsg(msg):
+    global botLastMsg
+    botLastMsg = msg
+
+async def handleEvent(ctx, title, date, sTime, eTime, desc): 
     if not date:
         return
 
@@ -107,10 +112,17 @@ async def handleEvent(ctx, eventId, title, date, sTime, eTime, desc):
     await ctx.send('End Time: ' + eTime)
     await ctx.send('Description: ' + desc)
 
-
-    #add event via google calendar API
-    calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId)
     try:
+        eventId = botLastMsg.id
+    #add event via google calendar API
+        calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId)
+    except:
+        eventId = None
+        traceback.print_exc()
+    try:
+        if not eventId:
+            eventId = None
+
         with open('eventIds.txt', mode='a+') as idList:
             idList.write(str(eventId) + '\n')
             print(idList.read())
@@ -118,3 +130,5 @@ async def handleEvent(ctx, eventId, title, date, sTime, eTime, desc):
         traceback.print_exc()
     finally:
         idList.close()
+
+    

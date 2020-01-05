@@ -61,12 +61,13 @@ def getEventIdBySummary(desiredEventSummary):
         pass # WIP
 
 
-def createCalEvent(title, dateTime, desc):
+def createCalEvent(title, dateTime, desc, eventId):
     event = {
         'summary': title,
         'description': desc,
         'start': {'dateTime': dateTime[0], 'timeZone': 'America/New_York'},
-        'end': {'dateTime': dateTime[1], 'timeZone': 'America/New_York'}
+        'end': {'dateTime': dateTime[1], 'timeZone': 'America/New_York'},
+        'id': eventId
         }
     print(title)
     print(desc)
@@ -106,20 +107,14 @@ async def listAllEvents(ctx):
     except:
         traceback.print_exc()
 
-async def rsvp(ctx, eventID):
-    try: # If it fails, that means that this request was placed from a DM
-        guest = ctx.guild.get_member(ctx.author.id).nick
-    except: 
-        # do dm stuff here
-        print('mission failed')
-        traceback.print_exc()
-    await ctx.send('You want to rsvp for ' + eventID + ' as ' + guest)
+async def addRsvp(ctx, eventId, guest):
+    print('ping')
+    event = {
+        'eventId' : eventId,
+        'attendees[].displayName' : guest
+    }
+    await ctx.send('You want to rsvp for ' + eventId + ' as ' + guest)
     try:
-        event = service.events().get(calendarId='primary', summary=eventID).execute()
-    except:
-        traceback.print_exc()
-        return
-    try:
-        updated_event = service.events().update(calendarId='primary', eventId=event['id'], body=event).execute()
+        updated_event = service.events().update(calendarId='primary', eventId=event[eventId], body=event).execute()
     except:
         traceback.print_exc()
