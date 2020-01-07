@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import traceback
+import json
 
 
 # If modifying these scopes, delete the file token.pickle.
@@ -83,6 +84,23 @@ def createCalEvent(title, dateTime, desc, eventId):
         traceback.print_exc()
         print('There was an error when trying to add the event to the calendar')
 
+    storedEventDetails = {
+        'title': title,
+        'eventID': eventId,
+        'guests': []
+    }
+    try:
+        if not eventId:
+            eventId = None
+        eventFile = 'event-database/' + eventId + '.json'
+
+        with open(eventFile, 'w') as idList:
+            json.dump(storedEventDetails, idList)
+    except:
+        traceback.print_exc()
+    finally:
+        idList.close()
+
 async def listAllEvents(ctx):
     eventList = ''
     eventDetails = {}
@@ -107,14 +125,33 @@ async def listAllEvents(ctx):
     except:
         traceback.print_exc()
 
-async def addRsvp(ctx, eventId, guest):
-    print('ping')
-    event = {
-        'eventId' : eventId,
-        'attendees[].displayName' : guest
-    }
-    await ctx.send('You want to rsvp for ' + eventId + ' as ' + guest)
+# ! Old google calendar RSVP
+# async def addRsvp(ctx, eventId, guest):
+#     print('ping')
+#     event = {
+#         'eventId' : eventId,
+#         'attendees[].displayName' : guest
+#     }
+#     await ctx.send('You want to rsvp for ' + eventId + ' as ' + guest)
+#     try:
+#         updated_event = service.events().update(calendarId='primary', eventId=event[eventId], body=event).execute()
+#     except:
+#         traceback.print_exc()
+
+async def addRsvp(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
     try:
-        updated_event = service.events().update(calendarId='primary', eventId=event[eventId], body=event).execute()
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+            details = {
+                'Id': eventId,
+                'Guests': [guest]
+            }
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
     except:
         traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+

@@ -13,6 +13,7 @@ import eventList
 import calendarInterface as calendar
 from time import sleep
 import event as ev
+import json
 
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 # TODO: implement verifyTime
@@ -105,13 +106,17 @@ async def on_raw_reaction_add(ctx):
     print('reaction ' + ' was added by ' + str(ctx.user_id))
 
     guest = ctx.user_id
+    eventId = None
     try:
-        with open('eventIds.txt', mode='r') as idList:
-            eventId = str(ctx.message_id)
-            if eventId in idList:
-                calendar.addRsvp(ctx, eventId, guest)
-    except:
-        traceback.print_exc()
+        eventId = str(ctx.message_id)
+        eventFile = 'event-database/' + eventId + '.json'
+        with open(eventFile, 'r') as idList:
+            eventDetails = json.load(idList)
+            if eventId in eventDetails:
+                eventName = idList['title']
+                calendar.addRsvp(eventName, eventId, guest)
+    # except:
+        # traceback.print_exc()
     finally:
         idList.close()
 

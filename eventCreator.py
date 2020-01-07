@@ -113,22 +113,9 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
     await ctx.send('Description: ' + desc)
 
     try:
-        eventId = botLastMsg.id
+        eventId = str(botLastMsg.id)
     #add event via google calendar API
         calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId)
     except:
         eventId = None
         traceback.print_exc()
-    try:
-        if not eventId:
-            eventId = None
-
-        with open('eventIds.txt', mode='a+') as idList:
-            idList.write(str(eventId) + '\n')
-            print(idList.read())
-    except:
-        traceback.print_exc()
-    finally:
-        idList.close()
-
-    
