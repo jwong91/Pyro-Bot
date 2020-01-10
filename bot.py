@@ -102,23 +102,50 @@ async def on_message(ctx):
 
 @bot.event
 async def on_raw_reaction_add(ctx):
+    if ctx.user_id in fn.bannedAttendeesList:
+        return
+
     print('reaction detected!')
     print('reaction ' + ' was added by ' + str(ctx.user_id))
 
     guest = ctx.user_id
     eventId = None
     try:
-        eventId = str(ctx.message_id)
-        eventFile = 'event-database/' + eventId + '.json'
+        try:
+            eventId = str(ctx.message_id)
+            eventFile = 'event-database/' + eventId + '.json'
+        except:
+            print('invalid event ID likely caused by non-event message being emoted')
+
         with open(eventFile, 'r') as idList:
             eventDetails = json.load(idList)
-            if eventId in eventDetails:
-                eventName = idList['title']
-                calendar.addRsvp(eventName, eventId, guest)
+            if eventId == str(eventDetails['eventID']):
+                eventName = eventDetails['title']
+                await calendar.addRsvp(eventName, eventId, guest)
     # except:
         # traceback.print_exc()
     finally:
         idList.close()
+
+@bot.event
+async def on_raw_reaction_remove(ctx):
+    if ctx.user_id in fn.bannedAttendeesList:
+        return
+
+    print('reaction was removed by ' + str(ctx.user_id))
+
+    guest = ctx.user_id
+    eventId = None
+ 
+    eventId = str(ctx.message_id)
+    eventFile = 'event-database/' + eventId + '.json'
+
+    with open(eventFile, 'r') as idList:
+        eventDetails = json.load(idList)
+
+        if eventId == str(eventDetails['eventID']):
+            eventName = eventDetails['title']
+            await calendar.removeRsvp(eventName, eventId, guest)
 
 
 async def getLastMessage(ctx):
@@ -181,7 +208,7 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         traceback.print_exc()
 
     try:   # ! can remove if bot sends a welcome message
-        sleep(0.5) # Sometimes it doesn't emote the last message
+        sleep(1) # Sometimes it doesn't emote the last message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
     except:

@@ -143,9 +143,44 @@ async def addRsvp(eventName, eventId, guest):
     try:
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
+
+            if not eventDetails['guests']:
+                eventDetails['guests'] = []
+            print(guest)
+            print(eventDetails['guests'])
+            print(type(eventDetails['guests']))
+
+            if str(guest) not in eventDetails['guests']:
+                eventDetails['guests'].append(str(guest))
+
+            print('guest list' + str(eventDetails['guests']))
             details = {
-                'Id': eventId,
-                'Guests': [guest]
+                'title': eventName,
+                'eventID': eventId,
+                'guests': eventDetails['guests']
+            }
+            print(details['guests'])
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
+    except:
+        traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+async def removeRsvp(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
+
+    try:
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+
+            if not eventDetails['guests']:
+                eventDetails['guests'] = []
+
+            details = {
+                'title': eventName,
+                'eventID': eventId,
+                'guests': eventDetails['guests'].remove(str(guest))
             }
         with open(eventFile, 'w') as rsvpDb:
             json.dump(details, rsvpDb)

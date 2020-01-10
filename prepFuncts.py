@@ -1,5 +1,9 @@
 import discord as dc
 
+bannedAttendeesList = [    
+    624756714486366208
+]
+
 
 boomerMisspellings = [
     '?oomer',
