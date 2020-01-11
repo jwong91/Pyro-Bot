@@ -14,6 +14,7 @@ import calendarInterface as calendar
 from time import sleep
 import event as ev
 import json
+import memberList
 
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 # TODO: implement verifyTime
@@ -55,11 +56,9 @@ BOT_PREFIX = '?' # Eventually put this into a config file
 
 bot = c.Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
 
-
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
-
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -108,8 +107,15 @@ async def on_raw_reaction_add(ctx):
     print('reaction detected!')
     print('reaction ' + ' was added by ' + str(ctx.user_id))
 
-    guest = ctx.user_id
+    for member in bot.get_all_members():
+        memberList.memberList[member.id] = member.display_name
+    print(memberList.memberList)
+
+    guestId = ctx.user_id
     eventId = None
+
+    guestName = memberList.memberList[guestId]
+    
     try:
         try:
             eventId = str(ctx.message_id)
@@ -121,9 +127,9 @@ async def on_raw_reaction_add(ctx):
             eventDetails = json.load(idList)
             if eventId == str(eventDetails['eventID']):
                 eventName = eventDetails['title']
-                await calendar.addRsvp(eventName, eventId, guest)
-    # except:
-        # traceback.print_exc()
+                await calendar.addRsvp(eventName, eventId, guestName)
+    except:
+        traceback.print_exc()
     finally:
         idList.close()
 
@@ -147,21 +153,16 @@ async def on_raw_reaction_remove(ctx):
             eventName = eventDetails['title']
             await calendar.removeRsvp(eventName, eventId, guest)
 
-
 async def getLastMessage(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
     return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
      
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
-
+    
 @bot.command()
-async def test(ctx):
-    await ctx.send('msg 1')
-    await ctx.send('msg 2')
-    await ctx.send('emote this msg')
-    print(botLastMsg.content)
-    await botLastMsg.add_reaction('👍')
-
+async def getMember(ctx):
+    print(bot.get_user(362779255634919424))
+    print(type(bot.get_user(362779255634919424)))
 
 @bot.command()
 async def boomer(ctx, *arg):

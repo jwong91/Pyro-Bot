@@ -1,4 +1,5 @@
 import discord as dc
+from discord import Client
 import eventList 
 from datetime import datetime
 import calendarInterface as calendar
