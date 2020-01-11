@@ -7,3 +7,5 @@ __pycache__/eventCreator.cpython-36.pyc
 credentials.json
 token.pickle
 .idea/
+event-database/
+jsontest.py
