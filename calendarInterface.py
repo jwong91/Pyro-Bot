@@ -325,8 +325,8 @@ async def getAttendees(ctx, title, date, desiredType):
                         else:
                             await ctx.send('The type of guest that was specified is not correct. \n \
                                     The vaild types are: going, notgoing, maybegoing.')
-                    await ctx.send(guestList)
-                    eventFound = True
+                        await ctx.send(guestList)
+                        eventFound = True
             finally:
                 rsvpDb.close()
         if not eventFound:
