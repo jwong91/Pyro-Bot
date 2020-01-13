@@ -223,7 +223,7 @@ async def manualPage(ctx, desiredPage='all'):
          \n By default, it shows the list of attendees. \
          \n The date is important because it provides a way to differentiate between two events of the same name.```'
     }
-    page = case[desiredPage]
+    page = case[desiredPage.lower()]
     await ctx.send(page)
 
 @bot.command()
