@@ -52,7 +52,7 @@ userLastMsg = None
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-BOT_PREFIX = '?' # Eventually put this into a config file
+BOT_PREFIX = '!' # Eventually put this into a config file
 
 bot = c.Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
 bot.remove_command('help')
