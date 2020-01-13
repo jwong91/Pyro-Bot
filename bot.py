@@ -55,6 +55,7 @@ token = os.getenv('DISCORD_TOKEN')
 BOT_PREFIX = '?' # Eventually put this into a config file
 
 bot = c.Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
+bot.remove_command('help')
 
 @bot.event
 async def on_ready():
@@ -172,7 +173,59 @@ async def getLastMessage(ctx):
     return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
      
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
-    
+
+@bot.command(name='help')
+async def manualPage(ctx, desiredPage='all'):
+    case = {
+        'all': '```All commands: \
+            \n help - Lists this help message. For more information on particular commands, type ?help [COMMAND] \
+            \n pyro - Checks to see if the user or specified user is a Pyropal \
+            \n pyrocount - Counts the number of times pyro has been used \
+            \n event - Creates an event \
+            \n listallevents - Lists all the events on the calendar \
+            \n going - Lists the people who have marked their attendance on an event```',
+
+        'help': '``` Name: help \
+                \n Usage: ?help [COMMAND] \
+                \n Example: ?help pyro - Shows the help page for the pyro command \
+                \n Description: By default, it lists all commands that are available to users. \
+                             \n If a command is specified, it will show more information relating to the specified command.```',
+        
+        'pyro': '``` Name: pyro \
+         \n Usage: ?pyro [USER] \
+         \n Example: ?pyro @Rob - Checks to see if Rob is a pyropal \
+         \n Description: By default, it checks to see if the user is a pyropal. \
+                      \n If a user is specified, the bot will check to see if they are a pyropal.```',
+
+        'pyrocount': '``` Name: pyrocount \
+         \n Usage: ?pyrocount \
+         \n Description: Counts the number of times the bot has determined a user to be a pyropal/not a pyropal. ```',
+
+         'event': '``` Name: event \
+          \n Usage: ?event [TITLE] [DATE] [START_TIME] [END_TIME] [DESCRIPTION]\
+          \n Example: ?event Pyrotech 1/4/2020 6:00 18:00 Pyrotech meeting \
+          \n Description: Creates an event with a specified title, date, start time, end time, and description. \
+          \n Event details are stored in Google Calendar and attendee details are stored in json files on the host computer. \
+          \n Times must be given in 24 hour time. \
+          \n If the year is not specified, it defaults to the current calendar year. If the year is specified, it must be a full year (i.e. 1/4/20 does not work but \
+          \n 1/4/2020 works.) \
+          \n Events currently cannot have their title or date changed after creation. However, times can be changed by editing them in Google Calendar. \
+          \n Multi-word arguments such as titles and descriptions must be enclosed in quotation marks, otherwise the bot recognizes them as different arguments.```',
+
+        'listallevents': '``` Name: listallevents \
+         \n Usage: ?listallevents \
+         \n Description: Lists all events on the calendar, including past ones.```',
+
+        'going': '``` Name: going \
+         \n Usage: ?going [EVENT] [DATE] [TYPE_OF_ATTENDEE] \
+         \n Example: ?going Pyrotech 1/4/2020 notgoing - Lists everyone who said they were not attending \
+         \n Description: Outputs a list of people who have marked their attendance on an event. \
+         \n By default, it shows the list of attendees. \
+         \n The date is important because it provides a way to differentiate between two events of the same name.```'
+    }
+    page = case[desiredPage]
+    await ctx.send(page)
+
 @bot.command()
 async def getMember(ctx):
     print(bot.get_user(362779255634919424))
@@ -189,7 +242,7 @@ async def boomer(ctx, *arg):
     print(ctx.author.id)
 
 
-@bot.command()
+@bot.command(name='pyrocount')
 async def boomercount(ctx, arg='()'):
     if arg != '()':
         return
