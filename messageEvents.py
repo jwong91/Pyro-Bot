@@ -14,21 +14,21 @@ async def handleBoomer(ctx, author, mentionedUser, *arg):
 
     bChance = rand.randint(0,1)
     if len(arg) == 0 and bChance == False:
-        await ctx.send('you are not pyro, ' + '<@' + str(author) + '>')
+        await ctx.send('you are not pyropal, ' + '<@' + str(author) + '>')
         boomerNo += 1
 
     elif len(arg) == 0 and bChance == True:
-        await ctx.send('you are pyro, ' + '<@' + str(author) + '>')
+        await ctx.send('you are pyropal, ' + '<@' + str(author) + '>')
         boomerYes += 1
 
     elif len(str(mentionedUser)) > 0 and bChance == 0:
-        await ctx.send('<@' + str(mentionedUser) + '>' + ' is not pyro')
+        await ctx.send('<@' + str(mentionedUser) + '>' + ' is not pyropal')
         boomerNo += 1
         print(arg)
         print(len(arg))
 
     elif len(str(mentionedUser)) > 0 and bChance == 1:
-        await ctx.send('<@' + str(mentionedUser) + '>' + ' is pyro')
+        await ctx.send('<@' + str(mentionedUser) + '>' + ' is pyropal')
         boomerYes += 1
 
 async def handleBoomercount(ctx):
