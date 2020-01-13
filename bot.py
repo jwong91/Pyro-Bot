@@ -64,10 +64,10 @@ async def on_ready():
 async def on_command_error(ctx, error):
     print('Bad command: ' + ctx.message.content)
     if ctx.message.content in fn.boomerMisspellings:
-        await ctx.send('learn to type, boomer' + ' <:face:627141817678168064>')
+        await ctx.send('Pyro command error')
     else:
         traceback.print_exc()
-        await ctx.send('learn to type, loser' + ' <:face:627141817678168064>')
+        await ctx.send('Command error')
         # await bot.logout()
 
 @bot.event
@@ -178,7 +178,7 @@ async def getMember(ctx):
     print(bot.get_user(362779255634919424))
     print(type(bot.get_user(362779255634919424)))
 
-@bot.command()
+@bot.command(name='pyro')
 async def boomer(ctx, *arg):
     author = ctx.author.id
     try:
