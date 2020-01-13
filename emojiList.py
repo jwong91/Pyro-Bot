@@ -1,2 +1,3 @@
 thumbsUp = '👍'
 thumbsDown = '👎'
+maybe = '😼'

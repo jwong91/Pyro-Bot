@@ -92,8 +92,8 @@ async def on_message(ctx):
     print('------------------------------------')
 
     author = str(ctx.author.id)
-    if author == '355464236899631115':
-        await ctx.channel.send('_ _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n_ _')
+    # if author == '355464236899631115':
+    #     await ctx.channel.send('_ _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n_ _')
 
     # if author == '285952812683362306':
     #     await ctx.channel.send('dunkan')
@@ -127,7 +127,12 @@ async def on_raw_reaction_add(ctx):
             eventDetails = json.load(idList)
             if eventId == str(eventDetails['eventID']):
                 eventName = eventDetails['title']
-                await calendar.addRsvp(eventName, eventId, guestName)
+                if ctx.emoji.name == emoji.thumbsUp:
+                    await calendar.addRsvp(eventName, eventId, guestName)
+                elif ctx.emoji.name == emoji.thumbsDown:
+                    await calendar.addNotGoing(eventName, eventId, guestName)
+                elif ctx.emoji.name == emoji.maybe:
+                    await calendar.addMaybeGoing(eventName, eventId, guestName)
     except:
         traceback.print_exc()
     finally:
@@ -140,10 +145,13 @@ async def on_raw_reaction_remove(ctx):
 
     print('reaction was removed by ' + str(ctx.user_id))
 
-    guest = ctx.user_id
-    eventId = None
- 
+    for member in bot.get_all_members():
+        memberList.memberList[member.id] = member.display_name
+    print(memberList.memberList)
+
+    guestId = ctx.user_id
     eventId = str(ctx.message_id)
+    guestName = memberList.memberList[guestId]
     eventFile = 'event-database/' + eventId + '.json'
 
     with open(eventFile, 'r') as idList:
@@ -151,7 +159,13 @@ async def on_raw_reaction_remove(ctx):
 
         if eventId == str(eventDetails['eventID']):
             eventName = eventDetails['title']
-            await calendar.removeRsvp(eventName, eventId, guest)
+
+            if ctx.emoji.name == emoji.thumbsUp:
+                await calendar.removeRsvp(eventName, eventId, guestName)
+            elif ctx.emoji.name == emoji.thumbsDown:
+                await calendar.removeNotGoing(eventName, eventId, guestName)
+            elif ctx.emoji.name == emoji.maybe:
+                await calendar.removeMaybeGoing(eventName, eventId, guestName) 
 
 async def getLastMessage(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
@@ -204,7 +218,7 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         return
 
     try:
-        await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc)
+        await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc, date)
     except:
         traceback.print_exc()
 
@@ -220,6 +234,10 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
 async def listEvents(ctx):
     await ctx.send('Getting all events...')
     await calendar.listAllEvents(ctx)
+
+@bot.command(name='going')
+async def whoIsAttending(ctx, title, date, desiredType='going'):
+    await calendar.getAttendees(ctx, title, date, desiredType)
 
 @bot.command()
 async def rsvp(ctx, desiredEvent=None):

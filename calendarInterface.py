@@ -62,7 +62,7 @@ def getEventIdBySummary(desiredEventSummary):
         pass # WIP
 
 
-def createCalEvent(title, dateTime, desc, eventId):
+def createCalEvent(title, dateTime, desc, eventId, date):
     event = {
         'summary': title,
         'description': desc,
@@ -87,7 +87,10 @@ def createCalEvent(title, dateTime, desc, eventId):
     storedEventDetails = {
         'title': title,
         'eventID': eventId,
-        'guests': []
+        'date': date,
+        'attending': [],
+        'not attending': [],
+        'maybe attending': []
     }
     try:
         if not eventId:
@@ -144,22 +147,78 @@ async def addRsvp(eventName, eventId, guest):
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            if not eventDetails['guests']:
-                eventDetails['guests'] = []
-            print(guest)
-            print(eventDetails['guests'])
-            print(type(eventDetails['guests']))
+            if not eventDetails['attending']:
+                eventDetails['attending'] = []
 
-            if str(guest) not in eventDetails['guests']:
-                eventDetails['guests'].append(str(guest))
+            if str(guest) not in eventDetails['attending']:
+                eventDetails['attending'].append(str(guest))
 
-            print('guest list' + str(eventDetails['guests']))
+            print('guest list' + str(eventDetails['attending']))
             details = {
                 'title': eventName,
                 'eventID': eventId,
-                'guests': eventDetails['guests']
+                'date': eventDetails['date'],
+                'attending': eventDetails['attending'],
+                'not attending': eventDetails['not attending'],
+                'maybe attending': eventDetails['maybe attending']
             }
-            print(details['guests'])
+            print(details)
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
+    except:
+        traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+async def addNotGoing(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
+    try:
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+
+            if not eventDetails['not attending']:
+                eventDetails['not attending'] = []
+
+            if str(guest) not in eventDetails['not attending']:
+                eventDetails['not attending'].append(str(guest))
+
+            details = {
+                'title': eventName,
+                'eventID': eventId,
+                'date': eventDetails['date'],                
+                'attending': eventDetails['attending'],
+                'not attending': eventDetails['not attending'],
+                'maybe attending': eventDetails['maybe attending']
+            }
+            print(details)
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
+    except:
+        traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+async def addMaybeGoing(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
+    try:
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+
+            if not eventDetails['maybe attending']:
+                eventDetails['maybe attending'] = []
+
+            if str(guest) not in eventDetails['maybe attending']:
+                eventDetails['maybe attending'].append(str(guest))
+
+            details = {
+                'title': eventName,
+                'eventID': eventId,
+                'date': eventDetails['date'],
+                'attending': eventDetails['attending'],
+                'not attending': eventDetails['not attending'],
+                'maybe attending': eventDetails['maybe attending']
+            }
+            print(details)
         with open(eventFile, 'w') as rsvpDb:
             json.dump(details, rsvpDb)
     except:
@@ -174,13 +233,13 @@ async def removeRsvp(eventName, eventId, guest):
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            if not eventDetails['guests']:
-                eventDetails['guests'] = []
-
             details = {
                 'title': eventName,
                 'eventID': eventId,
-                'guests': eventDetails['guests'].remove(str(guest))
+                'date': eventDetails['date'],
+                'attending': eventDetails['attending'].remove(str(guest)),
+                'not attending': eventDetails['not attending'],
+                'maybe attending': eventDetails['maybe attending']
             }
         with open(eventFile, 'w') as rsvpDb:
             json.dump(details, rsvpDb)
@@ -188,5 +247,91 @@ async def removeRsvp(eventName, eventId, guest):
         traceback.print_exc()
     finally:
         rsvpDb.close()
+
+async def removeNotGoing(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
+
+    try:
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+
+            details = {
+                'title': eventName,
+                'eventID': eventId,
+                'date': eventDetails['date'],
+                'attending': eventDetails['attending'],
+                'not attending': eventDetails['not attending'].remove(str(guest)),
+                'maybe attending': eventDetails['maybe attending']
+            }
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
+    except:
+        traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+async def removeMaybeGoing(eventName, eventId, guest):
+    eventFile = 'event-database/' + eventId + '.json'
+
+    try:
+        with open(eventFile, 'r') as rsvpDb:
+            eventDetails = json.load(rsvpDb)
+
+            details = {
+                'title': eventName,
+                'eventID': eventId,
+                'date': eventDetails['date'],
+                'attending': eventDetails['attending'],
+                'not attending': eventDetails['not attending'],
+                'maybe attending': eventDetails['maybe attending'].remove(str(guest))
+            }
+        with open(eventFile, 'w') as rsvpDb:
+            json.dump(details, rsvpDb)
+    except:
+        traceback.print_exc()
+    finally:
+        rsvpDb.close()
+
+async def getAttendees(ctx, title, date, desiredType):
+    try:
+        eventFound = False
+        for file in os.listdir('event-database'):
+            try:
+                with open('event-database/' + file, 'r') as rsvpDb: 
+                    eventDetails = json.load(rsvpDb)
+                    if title in eventDetails['title'] and date in eventDetails['date']:
+                        guestList = ''
+
+                        if desiredType == 'going':
+                            if not eventDetails['attending']:
+                                guestList = 'No one is attending.'
+                            else:
+                                for guest in eventDetails['attending']:
+                                    guestList = guestList + guest + '\n'
+
+                        elif desiredType == 'notgoing':
+                            if not eventDetails['not attending']:
+                                guestList = 'No one is not attending.'
+                            else:
+                                for guest in eventDetails['not attending']:
+                                    guestList = guestList + guest + '\n'
+
+                        elif desiredType == 'maybegoing':
+                            if not eventDetails['maybe attending']:
+                                guestList = 'No one is maybe attending.'
+                            else:
+                                for guest in eventDetails['maybe attending']:
+                                    guestList = guestList + guest + '\n'
+                        else:
+                            await ctx.send('The type of guest that was specified is not correct. \n \
+                                    The vaild types are: going, notgoing, maybegoing.')
+                    await ctx.send(guestList)
+                    eventFound = True
+            finally:
+                rsvpDb.close()
+        if not eventFound:
+            await ctx.send('The bot could not find the event specified.')
+    except:
+        traceback.print_exc()
 
 

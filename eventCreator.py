@@ -93,7 +93,7 @@ def updateBotLastMsg(msg):
     global botLastMsg
     botLastMsg = msg
 
-async def handleEvent(ctx, title, date, sTime, eTime, desc): 
+async def handleEvent(ctx, title, date, sTime, eTime, desc, rawDate): 
     if not date:
         return
 
@@ -116,7 +116,7 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc):
     try:
         eventId = str(botLastMsg.id)
     #add event via google calendar API
-        calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId)
+        calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId, rawDate)
     except:
         eventId = None
         traceback.print_exc()
