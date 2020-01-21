@@ -104,14 +104,11 @@ async def handleEvent(ctx, title, date, sTime, eTime, desc, rawDate):
     print('Description: ' + desc)
     print('Creating event: Year: ' + date.get('Year'))
 
-    await ctx.send('Event details:')
-    await ctx.send('Title: ' + title)
-    await ctx.send('Month: ' + date.get('Month'))
-    await ctx.send('Day: ' + date.get('Day'))
-    await ctx.send('Year: ' + date.get('Year'))
-    await ctx.send('Start Time: ' + sTime)
-    await ctx.send('End Time: ' + eTime)
-    await ctx.send('Description: ' + desc)
+    eventInfoMsg = '```You created an event called ' + title + '. \n' \
+                    + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
+                        + ' from ' + sTime + ' to ' + eTime + '. \n' \
+                    + ' The event\'s description is: ' + desc + '.```'
+    await ctx.send(eventInfoMsg)
 
     try:
         eventId = str(botLastMsg.id)

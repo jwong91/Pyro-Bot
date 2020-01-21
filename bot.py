@@ -110,7 +110,7 @@ async def on_raw_reaction_add(ctx):
 
     for member in bot.get_all_members():
         memberList.memberList[member.id] = member.display_name
-    print(memberList.memberList)
+    # print(memberList.memberList)
 
     guestId = ctx.user_id
     eventId = None
@@ -148,7 +148,7 @@ async def on_raw_reaction_remove(ctx):
 
     for member in bot.get_all_members():
         memberList.memberList[member.id] = member.display_name
-    print(memberList.memberList)
+    # print(memberList.memberList)
 
     guestId = ctx.user_id
     eventId = str(ctx.message_id)
