@@ -233,16 +233,18 @@ async def removeRsvp(eventName, eventId, guest):
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],
-                'attending': eventDetails['attending'].remove(str(guest)),
-                'not attending': eventDetails['not attending'],
-                'maybe attending': eventDetails['maybe attending']
-            }
+            attendingList = eventDetails['attending'].remove(str(guest))
+
+            # details = {
+            #     'title': eventName,
+            #     'eventID': eventId,
+            #     'date': eventDetails['date'],
+            #     'attending': attendingList,
+            #     'not attending': eventDetails['not attending'],
+            #     'maybe attending': eventDetails['maybe attending']
+            # }
         with open(eventFile, 'w') as rsvpDb:
-            json.dump(details, rsvpDb)
+            json.dump(eventDetails, rsvpDb)
     except:
         traceback.print_exc()
     finally:
@@ -255,16 +257,18 @@ async def removeNotGoing(eventName, eventId, guest):
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],
-                'attending': eventDetails['attending'],
-                'not attending': eventDetails['not attending'].remove(str(guest)),
-                'maybe attending': eventDetails['maybe attending']
-            }
+            attendingList = eventDetails['not attending'].remove(str(guest))
+
+            # details = {
+            #     'title': eventName,
+            #     'eventID': eventId,
+            #     'date': eventDetails['date'],
+            #     'attending': eventDetails['attending'],
+            #     'not attending': eventDetails['not attending'].remove(str(guest)),
+            #     'maybe attending': eventDetails['maybe attending']
+            # }
         with open(eventFile, 'w') as rsvpDb:
-            json.dump(details, rsvpDb)
+            json.dump(eventDetails, rsvpDb)
     except:
         traceback.print_exc()
     finally:
@@ -277,16 +281,18 @@ async def removeMaybeGoing(eventName, eventId, guest):
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],
-                'attending': eventDetails['attending'],
-                'not attending': eventDetails['not attending'],
-                'maybe attending': eventDetails['maybe attending'].remove(str(guest))
-            }
+            attendingList = eventDetails['maybe attending'].remove(str(guest))
+
+            # details = {
+            #     'title': eventName,
+            #     'eventID': eventId,
+            #     'date': eventDetails['date'],
+            #     'attending': eventDetails['attending'],
+            #     'not attending': eventDetails['not attending'],
+            #     'maybe attending': eventDetails['maybe attending'].remove(str(guest))
+            # }
         with open(eventFile, 'w') as rsvpDb:
-            json.dump(details, rsvpDb)
+            json.dump(eventDetails, rsvpDb)
     except:
         traceback.print_exc()
     finally:

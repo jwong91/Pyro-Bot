@@ -1,4 +1,4 @@
-import discord as dc 
+import discord as dc
 import os
 from dotenv import load_dotenv
 from discord.ext.commands import Bot
@@ -8,7 +8,7 @@ import prepFuncts as fn
 import eventCreator as eCreate
 import messageEvents as mEvents
 import traceback
-import emojiList as emoji   
+import emojiList as emoji
 import eventList
 import calendarInterface as calendar
 from time import sleep
@@ -116,7 +116,7 @@ async def on_raw_reaction_add(ctx):
     eventId = None
 
     guestName = memberList.memberList[guestId]
-    
+
     try:
         try:
             eventId = str(ctx.message_id)
@@ -166,12 +166,12 @@ async def on_raw_reaction_remove(ctx):
             elif ctx.emoji.name == emoji.thumbsDown:
                 await calendar.removeNotGoing(eventName, eventId, guestName)
             elif ctx.emoji.name == emoji.maybe:
-                await calendar.removeMaybeGoing(eventName, eventId, guestName) 
+                await calendar.removeMaybeGoing(eventName, eventId, guestName)
 
 async def getLastMessage(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
     return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
-     
+
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
 
 @bot.command(name='help')
@@ -190,7 +190,7 @@ async def manualPage(ctx, desiredPage='all'):
                 \n Example: ?help pyro - Shows the help page for the pyro command \
                 \n Description: By default, it lists all commands that are available to users. \
                              \n If a command is specified, it will show more information relating to the specified command.```',
-        
+
         'pyro': '``` Name: pyro \
          \n Usage: ?pyro [USER] \
          \n Example: ?pyro @Rob - Checks to see if Rob is a pyropal \
@@ -297,7 +297,7 @@ async def rsvp(ctx, desiredEvent=None):
     if not desiredEvent:
         await ctx.send('Please enter an event that you wish to RSVP for.')
         return
-    
+
     await calendar.rsvp(ctx, desiredEvent)
 
 @bot.command(name='quit')
