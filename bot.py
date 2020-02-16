@@ -32,6 +32,7 @@ import memberList
 # TODO: Allow for 2 digit years (i.e. 19 = 2019)*^
 # TODO: Allow for 12h time input*^
 # TODO: Fix bug that doesn't output event times correctly
+# TODO: Fix bug that creates an event message when invalid values are input
 
 # RSVP implementation:
 # Emoji based
@@ -68,7 +69,7 @@ async def on_command_error(ctx, error):
         await ctx.send('Pyro command error')
     else:
         traceback.print_exc()
-        await ctx.send('Command error')
+        await ctx.send('Command error ' + '(' + str(error) + ')')
         # await bot.logout()
 
 @bot.event
