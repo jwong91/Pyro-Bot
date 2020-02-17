@@ -1,3 +1,3 @@
-thumbsUp = '👍'
-thumbsDown = '👎'
-maybe = '😼'
+thumbsUp = '<:yes:678747832131256333>'
+thumbsDown = '<:no:678747646663327744>'
+maybe = '<:maybe:678747717778014270>'

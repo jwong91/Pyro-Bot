@@ -9,3 +9,4 @@ token.pickle
 .idea/
 event-database/
 jsontest.py
+/event-database_old/

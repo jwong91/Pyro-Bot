@@ -129,11 +129,11 @@ async def on_raw_reaction_add(ctx):
             eventDetails = json.load(idList)
             if eventId == str(eventDetails['eventID']):
                 eventName = eventDetails['title']
-                if ctx.emoji.name == emoji.thumbsUp:
+                if str(ctx.emoji) == emoji.thumbsUp:
                     await calendar.addRsvp(eventName, eventId, guestName)
-                elif ctx.emoji.name == emoji.thumbsDown:
+                elif str(ctx.emoji) == emoji.thumbsDown:
                     await calendar.addNotGoing(eventName, eventId, guestName)
-                elif ctx.emoji.name == emoji.maybe:
+                elif str(ctx.emoji) == emoji.maybe:
                     await calendar.addMaybeGoing(eventName, eventId, guestName)
     except:
         traceback.print_exc()
@@ -162,11 +162,11 @@ async def on_raw_reaction_remove(ctx):
         if eventId == str(eventDetails['eventID']):
             eventName = eventDetails['title']
 
-            if ctx.emoji.name == emoji.thumbsUp:
+            if str(ctx.emoji) == emoji.thumbsUp:
                 await calendar.removeRsvp(eventName, eventId, guestName)
-            elif ctx.emoji.name == emoji.thumbsDown:
+            elif str(ctx.emoji) == emoji.thumbsDown:
                 await calendar.removeNotGoing(eventName, eventId, guestName)
-            elif ctx.emoji.name == emoji.maybe:
+            elif str(ctx.emoji) == emoji.maybe:
                 await calendar.removeMaybeGoing(eventName, eventId, guestName)
 
 async def getLastMessage(ctx):
@@ -277,9 +277,10 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
         traceback.print_exc()
 
     try:   # ! can remove if bot sends a welcome message
-        sleep(1) # Sometimes it doesn't emote the last message
+        sleep(2)  # Sometimes it doesn't emote the last message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
+        await botLastMsg.add_reaction(emoji.maybe)
     except:
         print('ERROR: No valid bot msg')
 
