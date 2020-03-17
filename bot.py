@@ -16,6 +16,9 @@ import event as ev
 import json
 import memberList
 
+# TODO: Format to PEP8
+# TODO: Rework event creation GUI
+# TODO: Fix listallevents
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
 # TODO: implement verifyTime
 # TODO: get multi word user input
