@@ -109,11 +109,15 @@ async def handle_event(ctx, title, date, s_time, e_time, desc, raw_date):
     print('Description: ' + desc)
     print('Creating event: Year: ' + date.get('Year'))
 
-    event_info_msg = '```You created an event called ' + title + '. \n' \
-                   + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
-                   + ' from ' + s_time + ' to ' + e_time + '. \n' \
-                   + ' The event\'s description is: ' + desc + '.```'
-    await ctx.send(event_info_msg)
+    event_message = dc.Embed(title=title, description=desc, color=0xFF0000)  # 0xFF0000 is red
+    event_message.set_author(name='Event')
+    event_message.add_field(name='*Date*', value='/'.join([date.get('Month'), date.get('Day'), date.get('Year')]))
+    event_message.add_field(name='*Time*', value='-'.join([s_time, e_time]), inline=False)
+    # event_info_msg = '```You created an event called ' + title + '. \n' \
+    #                + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
+    #                + ' from ' + s_time + ' to ' + e_time + '. \n' \
+    #                + ' The event\'s description is: ' + desc + '.```'
+    await ctx.send(embed=event_message)
 
     try:
         event_id = str(botLastMsg.id)
