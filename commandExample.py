@@ -8,14 +8,16 @@ token = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix='?')
 
+
 @bot.event
-async def on_ready(): 
+async def on_ready():
     print('bot is ready!')
     channel = bot.get_channel(627968216588746795)
     await channel.send('ready!')
 
+
 @bot.command()
-async def ping(ctx): #Command is invoked with '?ping', ctx is context arg (i.e. message)
+async def ping(ctx):  # Command is invoked with '?ping', ctx is context arg (i.e. message)
     await ctx.send('pong!')
 
 bot.run(token)

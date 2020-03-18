@@ -1,37 +1,39 @@
 import discord as dc
 from discord import Client
-import eventList 
+import eventList
 from datetime import datetime
 import calendarInterface as calendar
 import traceback
 
 # calendarInterface.createCalEvent('test', 'date', 'time', 'time1', 'descHere')
 
-#Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
+# Input: ?event date (mm/dd/yy (optional)), starttime (pm/am), endtime (pm/am), description
 # Separated by ':'
 
 botLastMsg = None
 
-def verifyTime(time):
+
+def verify_time(time):
     try:
         split = time.split('-')
-        sTime = int(split[0])
-        eTime = int(split[1])
+        s_time = int(split[0])
+        e_time = int(split[1])
     except:
         print('ERROR: Bad time')
 
-    print(eTime)
-    print(sTime)
+    print(e_time)
+    print(s_time)
 
-    if (type(sTime) != int or sTime > 12 or
-        type(eTime) != int or eTime > 12):
+    if (type(s_time) != int or s_time > 12 or
+       type(e_time) != int or e_time > 12):
         print('Bad time')
         return False
     else:
         print('Valid time')
         return True
 
-def verifyDate(date):
+
+def verify_date(date):
     if len(date) > 3:
         print('Invalid date')
         return False
@@ -45,13 +47,13 @@ def verifyDate(date):
         return False
 
 
-def parseDate(ctx, date):
+def parse_date(ctx, date):
     split = date.split('/')
     if len(split) < 3:
-            split.append(str(datetime.now().year))
-            print(split)
+        split.append(str(datetime.now().year))
+        print(split)
 
-    if not verifyDate(split):
+    if not verify_date(split):
         return
 
     try:
@@ -64,56 +66,59 @@ def parseDate(ctx, date):
         print('invalid date')
         return False
 
-    
-def createDateTime(date, sTime, eTime):
-    # if verifyTime(sTime, eTime):
-        # Create a datetime that looks like YYYY-MM-DDTHH:MM:SS
-    startDatetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
-                    + sTime + ':' + '00']
-    endDatetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
-                    + eTime + ':' + '00']
 
-    # print(startDatetime)
-    # print(endDatetime)
-    return startDatetime, endDatetime
+def create_date_time(date, s_time, e_time):
+    # if verify_time(s_time, e_time):
+    # Create a datetime that looks like YYYY-MM-DDTHH:MM:SS
+    start_datetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
+                     + s_time + ':' + '00']
+    end_datetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
+                   + e_time + ':' + '00']
 
-def makeReadableDateTime(dateTime):
-    split = dateTime.split('T')
+    # print(start_datetime)
+    # print(end_datetime)
+    return start_datetime, end_datetime
+
+
+def make_readable_date_time(date_time):
+    split = date_time.split('T')
     date = split[0].split('-')
     date[0], date[1] = date[1], date[0]
     date[1], date[2] = date[2], date[1]
     date = ('/').join(date)
-    
-    time = {'start' : split[1].split('-')[0], 'end' : split[1].split('-')[1]}
+
+    time = {'start': split[1].split('-')[0], 'end': split[1].split('-')[1]}
     time['start'] = time['start'][:-3]
-    
+
     return date, time
 
-def updateBotLastMsg(msg):
+
+def update_bot_last_msg(msg):
     global botLastMsg
     botLastMsg = msg
 
-async def handleEvent(ctx, title, date, sTime, eTime, desc, rawDate): 
+
+async def handle_event(ctx, title, date, s_time, e_time, desc, raw_date):
     if not date:
         return
 
     print('Create Event: ')
     print('Year: ' + date.get('Year'))
-    print('Start Time: ' + sTime)
-    print('End Time: ' + eTime)
+    print('Start Time: ' + s_time)
+    print('End Time: ' + e_time)
     print('Description: ' + desc)
     print('Creating event: Year: ' + date.get('Year'))
 
-    eventInfoMsg = '```You created an event called ' + title + '. \n' \
-                    + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
-                        + ' from ' + sTime + ' to ' + eTime + '. \n' \
-                    + ' The event\'s description is: ' + desc + '.```'
-    await ctx.send(eventInfoMsg)
+    event_info_msg = '```You created an event called ' + title + '. \n' \
+                   + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
+                   + ' from ' + s_time + ' to ' + e_time + '. \n' \
+                   + ' The event\'s description is: ' + desc + '.```'
+    await ctx.send(event_info_msg)
 
     try:
-        eventId = str(botLastMsg.id)
-    #add event via google calendar API
-        calendar.createCalEvent(title, createDateTime(date, sTime, eTime), desc, eventId, rawDate)
+        event_id = str(botLastMsg.id)
+    # Add event via google calendar API
+        calendar.create_cal_event(title, create_date_time(date, s_time, e_time), desc, event_id, raw_date)
     except:
-        eventId = None
+        event_id = None
         traceback.print_exc()

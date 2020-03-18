@@ -20,7 +20,7 @@ import memberList
 # TODO: Rework event creation GUI
 # TODO: Fix listallevents
 # TODO: deal with dates and times as their parts (i.e. minutes and hours) in dictionaries
-# TODO: implement verifyTime
+# TODO: implement verify_time
 # TODO: get multi word user input
 
 # TODO: Add formatting to outputs of listAllEvents, etc.
@@ -56,14 +56,16 @@ userLastMsg = None
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-BOT_PREFIX = '!' # Eventually put this into a config file
+BOT_PREFIX = '!'  # Eventually put this into a config file
 
 bot = c.Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
 bot.remove_command('help')
 
+
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
+
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -75,16 +77,18 @@ async def on_command_error(ctx, error):
         await ctx.send('Command error ' + '(' + str(error) + ')')
         # await bot.logout()
 
+
 @bot.event
 async def on_error(error, *args, **kwargs):
     traceback.print_exc()
+
 
 @bot.event
 async def on_message(ctx):
     if ctx.author == bot.user:
         global botLastMsg
         botLastMsg = ctx
-        eCreate.updateBotLastMsg(ctx)
+        eCreate.update_bot_last_msg(ctx)
         return
     else:
         global userLastMsg
@@ -104,6 +108,7 @@ async def on_message(ctx):
     #     await ctx.channel.send('dunkan')
     await bot.process_commands(ctx)
 
+
 @bot.event
 async def on_raw_reaction_add(ctx):
     if ctx.user_id in fn.bannedAttendeesList:
@@ -116,32 +121,33 @@ async def on_raw_reaction_add(ctx):
         memberList.memberList[member.id] = member.display_name
     # print(memberList.memberList)
 
-    guestId = ctx.user_id
-    eventId = None
+    guest_id = ctx.user_id
+    event_id = None
 
-    guestName = memberList.memberList[guestId]
+    guest_name = memberList.memberList[guest_id]
 
     try:
         try:
-            eventId = str(ctx.message_id)
-            eventFile = 'event-database/' + eventId + '.json'
+            event_id = str(ctx.message_id)
+            event_file = 'event-database/' + event_id + '.json'
         except:
             print('invalid event ID likely caused by non-event message being emoted')
 
-        with open(eventFile, 'r') as idList:
-            eventDetails = json.load(idList)
-            if eventId == str(eventDetails['eventID']):
-                eventName = eventDetails['title']
+        with open(event_file, 'r') as idList:
+            event_details = json.load(idList)
+            if event_id == str(event_details['eventID']):
+                event_name = event_details['title']
                 if str(ctx.emoji) == emoji.thumbsUp:
-                    await calendar.addRsvp(eventName, eventId, guestName)
+                    await calendar.add_rsvp(event_name, event_id, guest_name)
                 elif str(ctx.emoji) == emoji.thumbsDown:
-                    await calendar.addNotGoing(eventName, eventId, guestName)
+                    await calendar.add_not_going(event_name, event_id, guest_name)
                 elif str(ctx.emoji) == emoji.maybe:
-                    await calendar.addMaybeGoing(eventName, eventId, guestName)
+                    await calendar.add_maybe_going(event_name, event_id, guest_name)
     except:
         traceback.print_exc()
     finally:
         idList.close()
+
 
 @bot.event
 async def on_raw_reaction_remove(ctx):
@@ -154,32 +160,34 @@ async def on_raw_reaction_remove(ctx):
         memberList.memberList[member.id] = member.display_name
     # print(memberList.memberList)
 
-    guestId = ctx.user_id
-    eventId = str(ctx.message_id)
-    guestName = memberList.memberList[guestId]
-    eventFile = 'event-database/' + eventId + '.json'
+    guest_id = ctx.user_id
+    event_id = str(ctx.message_id)
+    guest_name = memberList.memberList[guest_id]
+    event_file = 'event-database/' + event_id + '.json'
 
-    with open(eventFile, 'r') as idList:
-        eventDetails = json.load(idList)
+    with open(event_file, 'r') as idList:
+        event_details = json.load(idList)
 
-        if eventId == str(eventDetails['eventID']):
-            eventName = eventDetails['title']
+        if event_id == str(event_details['eventID']):
+            event_name = event_details['title']
 
             if str(ctx.emoji) == emoji.thumbsUp:
-                await calendar.removeRsvp(eventName, eventId, guestName)
+                await calendar.remove_rsvp(event_name, event_id, guest_name)
             elif str(ctx.emoji) == emoji.thumbsDown:
-                await calendar.removeNotGoing(eventName, eventId, guestName)
+                await calendar.remove_not_going(event_name, event_id, guest_name)
             elif str(ctx.emoji) == emoji.maybe:
-                await calendar.removeMaybeGoing(eventName, eventId, guestName)
+                await calendar.remove_maybe_going(event_name, event_id, guest_name)
 
-async def getLastMessage(ctx):
+
+async def get_last_message(ctx):
     await ctx.channel.send(str(ctx.channel.fetch_message('633395936751648774')))
-    return lambda ctx : str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
+    return lambda ctx: str(ctx.channel.fetch_message(int(ctx.channel.last_message_id)))
 
     # return str(ctx.channel.fetch_message(int(ctx.chanel.last_message_id)))
 
+
 @bot.command(name='help')
-async def manualPage(ctx, desiredPage='all'):
+async def manual_page(ctx, desired_page='all'):
     case = {
         'all': '```All commands: \
             \n help - Lists this help message. For more information on particular commands, type ?help [COMMAND] \
@@ -205,7 +213,7 @@ async def manualPage(ctx, desiredPage='all'):
          \n Usage: ?pyrocount \
          \n Description: Counts the number of times the bot has determined a user to be a pyropal/not a pyropal. ```',
 
-         'event': '``` Name: event \
+        'event': '``` Name: event \
           \n Usage: ?event [TITLE] [DATE] [START_TIME] [END_TIME] [DESCRIPTION]\
           \n Example: ?event Pyrotech 1/4/2020 6:00 18:00 Pyrotech meeting \
           \n Description: Creates an event with a specified title, date, start time, end time, and description. \
@@ -227,59 +235,61 @@ async def manualPage(ctx, desiredPage='all'):
          \n By default, it shows the list of attendees. \
          \n The date is important because it provides a way to differentiate between two events of the same name.```'
     }
-    page = case[desiredPage.lower()]
+    page = case[desired_page.lower()]
     await ctx.send(page)
 
+
 @bot.command()
-async def getMember(ctx):
+async def get_member(ctx):
     print(bot.get_user(362779255634919424))
     print(type(bot.get_user(362779255634919424)))
+
 
 @bot.command(name='pyro')
 async def boomer(ctx, *arg):
     author = ctx.author.id
     try:
-        mentionedUser = ctx.message.mentions[0].id
+        mentioned_user = ctx.message.mentions[0].id
     except:
-        mentionedUser = ''
-    await mEvents.handleBoomer(ctx, author, mentionedUser, *arg)
+        mentioned_user = ''
+    await mEvents.handle_boomer(ctx, author, mentioned_user, *arg)
     print(ctx.author.id)
 
 
 @bot.command(name='pyrocount')
-async def boomercount(ctx, arg='()'):
+async def boomer_count(ctx, arg='()'):
     if arg != '()':
         return
-    await mEvents.handleBoomercount(ctx)
+    await mEvents.handle_boomer_count(ctx)
 
 
 @bot.command()
-async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', lengthCatcher='()'):
+async def event(ctx, title='()', date='()', s_time='()', e_time='()', desc='()', length_catcher='()'):
     if title == '()':
         await ctx.send('Missing a title')
         return
     if date == '()':
         await ctx.send('Missing a date')
         return
-    if sTime == '()':
+    if s_time == '()':
         await ctx.send('Missing a start time')
         return
-    if eTime == '()':
+    if e_time == '()':
         await ctx.send('Missing an end time')
         return
     if desc == '()':
         await ctx.send('Missing a description')
         return
-    if lengthCatcher != '()':
+    if length_catcher != '()':
         await ctx.send('Too many details')
         return
 
     try:
-        await eCreate.handleEvent(ctx, title, eCreate.parseDate(ctx, date), sTime, eTime, desc, date)
+        await eCreate.handle_event(ctx, title, eCreate.parse_date(ctx, date), s_time, e_time, desc, date)
     except:
         traceback.print_exc()
 
-    try:   # ! can remove if bot sends a welcome message
+    try:  # ! can remove if bot sends a welcome message
         sleep(2)  # Sometimes it doesn't emote the last message
         await botLastMsg.add_reaction(emoji.thumbsUp)
         await botLastMsg.add_reaction(emoji.thumbsDown)
@@ -289,21 +299,24 @@ async def event(ctx, title='()', date='()', sTime='()', eTime='()', desc='()', l
 
 
 @bot.command(name='listAllEvents')
-async def listEvents(ctx):
+async def list_events(ctx):
     await ctx.send('Getting all events...')
-    await calendar.listAllEvents(ctx)
+    await calendar.list_all_events(ctx)
+
 
 @bot.command(name='going')
-async def whoIsAttending(ctx, title, date, desiredType='going'):
-    await calendar.getAttendees(ctx, title, date, desiredType)
+async def who_is_attending(ctx, title, date, desired_type='going'):
+    await calendar.get_attendees(ctx, title, date, desired_type)
+
 
 @bot.command()
-async def rsvp(ctx, desiredEvent=None):
-    if not desiredEvent:
+async def rsvp(ctx, desired_event=None):  # Deprecated
+    if not desired_event:
         await ctx.send('Please enter an event that you wish to RSVP for.')
         return
 
-    await calendar.rsvp(ctx, desiredEvent)
+    await calendar.rsvp(ctx, desired_event)
+
 
 @bot.command(name='quit')
 async def bot_quit(ctx):

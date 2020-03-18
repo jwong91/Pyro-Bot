@@ -40,42 +40,43 @@ if not creds or not creds.valid:
 service = build('calendar', 'v3', credentials=creds)
 
 # Call the Calendar API
-now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
 print('Getting the upcoming 10 events')
 events_result = service.events().list(calendarId='primary', timeMin=now,  # pylint: disable=no-member
-                                    maxResults=10, singleEvents=True,
-                                    orderBy='startTime').execute()
+                                      maxResults=10, singleEvents=True,
+                                      orderBy='startTime').execute()
 events = events_result.get('items', [])
 
 if not events:
     print('No upcoming events found.')
 for event in events:
-    start = event['start'].get('dateTime', event['start'].get('date'))
+    start = event['start'].get('date_time', event['start'].get('date'))
     print(start, event['summary'])
 
-def getEventIdBySummary(desiredEventSummary):
+
+def get_event_id_by_summary(desired_event_summary):
     events_result = service.events().list(calendarId='primary',  # pylint: disable=no-member
-                                    singleEvents=True,
-                                    orderBy='startTime').execute()
+                                          single_events=True,
+                                          order_by='startTime').execute()
     events = events_result.get('items', [])
     for event in events:
-        pass # WIP
+        pass  # WIP
 
 
-def createCalEvent(title, dateTime, desc, eventId, date):
+def create_cal_event(title, date_time, desc, event_id, date):
     event = {
         'summary': title,
         'description': desc,
-        'start': {'dateTime': dateTime[0], 'timeZone': 'America/New_York'},
-        'end': {'dateTime': dateTime[1], 'timeZone': 'America/New_York'},
-        'id': eventId
+        'start': {'date_time': date_time[0], 'timeZone': 'America/New_York'},
+        'end': {'date_time': date_time[1], 'timeZone': 'America/New_York'},
+        'id': event_id
         }
     print(title)
     print(desc)
-    print(type(dateTime[0]))
-    print(dateTime[0])
-    print(type(dateTime[1]))
-    print(dateTime[1])
+    print(type(date_time[0]))
+    print(date_time[0])
+    print(type(date_time[1]))
+    print(date_time[1])
 
     try:
         event = service.events().insert(calendarId='primary', body=event).execute()
@@ -84,162 +85,167 @@ def createCalEvent(title, dateTime, desc, eventId, date):
         traceback.print_exc()
         print('There was an error when trying to add the event to the calendar')
 
-    storedEventDetails = {
+    stored_event_details = {
         'title': title,
-        'eventID': eventId,
+        'eventID': event_id,
         'date': date,
         'attending': [],
         'not attending': [],
         'maybe attending': []
     }
     try:
-        if not eventId:
-            eventId = None
-        eventFile = 'event-database/' + eventId + '.json'
+        if not event_id:
+            event_id = None
+        event_file = 'event-database/' + event_id + '.json'
 
-        with open(eventFile, 'w') as idList:
-            json.dump(storedEventDetails, idList)
+        with open(event_file, 'w') as idList:
+            json.dump(stored_event_details, idList)
     except:
         traceback.print_exc()
     finally:
         idList.close()
 
-async def listAllEvents(ctx):
-    eventList = ''
-    eventDetails = {}
+
+async def list_all_events(ctx):
+    event_list = ''
+    event_details = {}
     events_result = service.events().list(calendarId='primary',  # pylint: disable=no-member
-                                    singleEvents=True,
-                                    orderBy='startTime').execute()
+                                          single_events=True,
+                                          order_by='startTime').execute()
     events = events_result.get('items', [])
     try:
         if not events:
             await ctx.send('No upcoming events found.')
         for event in events:
-            rawEventDateTime = event['start'].get('dateTime', event['start'].get('date'))
+            raw_event_date_time = event['start'].get('date_time', event['start'].get('date'))
             title = event['summary']
-            eventDetails = eCreate.makeReadableDateTime(rawEventDateTime)
-            date = eventDetails[0]
-            time = eventDetails[1]
-            eventList = eventList + 'Title: ' + title + '\n' \
-                        + 'Date: ' + eventDetails[0] + '\n' \
+            event_details = eCreate.make_readable_date_time(raw_event_date_time)
+            date = event_details[0]
+            time = event_details[1]
+            event_list = event_list + 'Title: ' + title + '\n' \
+                        + 'Date: ' + event_details[0] + '\n' \
                         + 'Time: ' + time['start'] + '-' + time['end'] + '\n \n'
-        await ctx.send(eventList)
-        print(eventList)
+        await ctx.send(event_list)
+        print(event_list)
     except:
         traceback.print_exc()
 
 # ! Old google calendar RSVP
-# async def addRsvp(ctx, eventId, guest):
+# async def addRsvp(ctx, event_id, guest):
 #     print('ping')
 #     event = {
-#         'eventId' : eventId,
+#         'event_id' : event_id,
 #         'attendees[].displayName' : guest
 #     }
-#     await ctx.send('You want to rsvp for ' + eventId + ' as ' + guest)
+#     await ctx.send('You want to rsvp for ' + event_id + ' as ' + guest)
 #     try:
-#         updated_event = service.events().update(calendarId='primary', eventId=event[eventId], body=event).execute()
+#         updated_event = service.events().update(calendarId='primary', event_id=event[event_id], body=event).execute()
 #     except:
 #         traceback.print_exc()
 
-async def addRsvp(eventName, eventId, guest):
-    eventFile = 'event-database/' + eventId + '.json'
+
+async def add_rsvp(event_name, event_id, guest):
+    event_file = 'event-database/' + event_id + '.json'
     try:
-        with open(eventFile, 'r') as rsvpDb:
-            eventDetails = json.load(rsvpDb)
+        with open(event_file, 'r') as rsvpDb:
+            event_details = json.load(rsvpDb)
 
-            if not eventDetails['attending']:
-                eventDetails['attending'] = []
+            if not event_details['attending']:
+                event_details['attending'] = []
 
-            if str(guest) not in eventDetails['attending']:
-                eventDetails['attending'].append(str(guest))
+            if str(guest) not in event_details['attending']:
+                event_details['attending'].append(str(guest))
 
-            print('guest list' + str(eventDetails['attending']))
+            print('guest list' + str(event_details['attending']))
             details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],
-                'attending': eventDetails['attending'],
-                'not attending': eventDetails['not attending'],
-                'maybe attending': eventDetails['maybe attending']
+                'title': event_name,
+                'eventID': event_id,
+                'date': event_details['date'],
+                'attending': event_details['attending'],
+                'not attending': event_details['not attending'],
+                'maybe attending': event_details['maybe attending']
             }
             print(details)
-        with open(eventFile, 'w') as rsvpDb:
+        with open(event_file, 'w') as rsvpDb:
             json.dump(details, rsvpDb)
     except:
         traceback.print_exc()
     finally:
         rsvpDb.close()
 
-async def addNotGoing(eventName, eventId, guest):
-    eventFile = 'event-database/' + eventId + '.json'
+
+async def add_not_going(event_name, event_id, guest):
+    event_file = 'event-database/' + event_id + '.json'
     try:
-        with open(eventFile, 'r') as rsvpDb:
-            eventDetails = json.load(rsvpDb)
+        with open(event_file, 'r') as rsvpDb:
+            event_details = json.load(rsvpDb)
 
-            if not eventDetails['not attending']:
-                eventDetails['not attending'] = []
+            if not event_details['not attending']:
+                event_details['not attending'] = []
 
-            if str(guest) not in eventDetails['not attending']:
-                eventDetails['not attending'].append(str(guest))
+            if str(guest) not in event_details['not attending']:
+                event_details['not attending'].append(str(guest))
 
             details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],                
-                'attending': eventDetails['attending'],
-                'not attending': eventDetails['not attending'],
-                'maybe attending': eventDetails['maybe attending']
+                'title': event_name,
+                'eventID': event_id,
+                'date': event_details['date'],
+                'attending': event_details['attending'],
+                'not attending': event_details['not attending'],
+                'maybe attending': event_details['maybe attending']
             }
             print(details)
-        with open(eventFile, 'w') as rsvpDb:
+        with open(event_file, 'w') as rsvpDb:
             json.dump(details, rsvpDb)
     except:
         traceback.print_exc()
     finally:
         rsvpDb.close()
 
-async def addMaybeGoing(eventName, eventId, guest):
-    eventFile = 'event-database/' + eventId + '.json'
+
+async def add_maybe_going(event_name, event_id, guest):
+    event_file = 'event-database/' + event_id + '.json'
     try:
-        with open(eventFile, 'r') as rsvpDb:
-            eventDetails = json.load(rsvpDb)
+        with open(event_file, 'r') as rsvpDb:
+            event_details = json.load(rsvpDb)
 
-            if not eventDetails['maybe attending']:
-                eventDetails['maybe attending'] = []
+            if not event_details['maybe attending']:
+                event_details['maybe attending'] = []
 
-            if str(guest) not in eventDetails['maybe attending']:
-                eventDetails['maybe attending'].append(str(guest))
+            if str(guest) not in event_details['maybe attending']:
+                event_details['maybe attending'].append(str(guest))
 
             details = {
-                'title': eventName,
-                'eventID': eventId,
-                'date': eventDetails['date'],
-                'attending': eventDetails['attending'],
-                'not attending': eventDetails['not attending'],
-                'maybe attending': eventDetails['maybe attending']
+                'title': event_name,
+                'eventID': event_id,
+                'date': event_details['date'],
+                'attending': event_details['attending'],
+                'not attending': event_details['not attending'],
+                'maybe attending': event_details['maybe attending']
             }
             print(details)
-        with open(eventFile, 'w') as rsvpDb:
+        with open(event_file, 'w') as rsvpDb:
             json.dump(details, rsvpDb)
     except:
         traceback.print_exc()
     finally:
         rsvpDb.close()
 
-async def removeRsvp(eventName, eventId, guest):
+
+async def remove_rsvp(eventName, eventId, guest):
     eventFile = 'event-database/' + eventId + '.json'
 
     try:
         with open(eventFile, 'r') as rsvpDb:
             eventDetails = json.load(rsvpDb)
 
-            attendingList = eventDetails['attending'].remove(str(guest))
+            attending_list = eventDetails['attending'].remove(str(guest))
 
             # details = {
-            #     'title': eventName,
-            #     'eventID': eventId,
+            #     'title': event_name,
+            #     'eventID': event_id,
             #     'date': eventDetails['date'],
-            #     'attending': attendingList,
+            #     'attending': attending_list,
             #     'not attending': eventDetails['not attending'],
             #     'maybe attending': eventDetails['maybe attending']
             # }
@@ -250,94 +256,95 @@ async def removeRsvp(eventName, eventId, guest):
     finally:
         rsvpDb.close()
 
-async def removeNotGoing(eventName, eventId, guest):
-    eventFile = 'event-database/' + eventId + '.json'
+
+async def remove_not_going(event_name, event_id, guest):
+    event_file = 'event-database/' + event_id + '.json'
 
     try:
-        with open(eventFile, 'r') as rsvpDb:
-            eventDetails = json.load(rsvpDb)
+        with open(event_file, 'r') as rsvpDb:
+            event_details = json.load(rsvpDb)
 
-            attendingList = eventDetails['not attending'].remove(str(guest))
+            attending_list = event_details['not attending'].remove(str(guest))
 
             # details = {
-            #     'title': eventName,
-            #     'eventID': eventId,
-            #     'date': eventDetails['date'],
-            #     'attending': eventDetails['attending'],
-            #     'not attending': eventDetails['not attending'].remove(str(guest)),
-            #     'maybe attending': eventDetails['maybe attending']
+            #     'title': event_name,
+            #     'eventID': event_id,
+            #     'date': event_details['date'],
+            #     'attending': event_details['attending'],
+            #     'not attending': event_details['not attending'].remove(str(guest)),
+            #     'maybe attending': event_details['maybe attending']
             # }
-        with open(eventFile, 'w') as rsvpDb:
-            json.dump(eventDetails, rsvpDb)
+        with open(event_file, 'w') as rsvpDb:
+            json.dump(event_details, rsvpDb)
     except:
         traceback.print_exc()
     finally:
         rsvpDb.close()
 
-async def removeMaybeGoing(eventName, eventId, guest):
-    eventFile = 'event-database/' + eventId + '.json'
+
+async def remove_maybe_going(event_name, event_id, guest):
+    event_file = 'event-database/' + event_id + '.json'
 
     try:
-        with open(eventFile, 'r') as rsvpDb:
-            eventDetails = json.load(rsvpDb)
+        with open(event_file, 'r') as rsvpDb:
+            event_details = json.load(rsvpDb)
 
-            attendingList = eventDetails['maybe attending'].remove(str(guest))
+            attending_list = event_details['maybe attending'].remove(str(guest))
 
             # details = {
-            #     'title': eventName,
-            #     'eventID': eventId,
-            #     'date': eventDetails['date'],
-            #     'attending': eventDetails['attending'],
-            #     'not attending': eventDetails['not attending'],
-            #     'maybe attending': eventDetails['maybe attending'].remove(str(guest))
+            #     'title': event_name,
+            #     'eventID': event_id,
+            #     'date': event_details['date'],
+            #     'attending': event_details['attending'],
+            #     'not attending': event_details['not attending'],
+            #     'maybe attending': event_details['maybe attending'].remove(str(guest))
             # }
-        with open(eventFile, 'w') as rsvpDb:
-            json.dump(eventDetails, rsvpDb)
+        with open(event_file, 'w') as rsvpDb:
+            json.dump(event_details, rsvpDb)
     except:
         traceback.print_exc()
     finally:
         rsvpDb.close()
 
-async def getAttendees(ctx, title, date, desiredType):
+
+async def get_attendees(ctx, title, date, desired_type):
     try:
-        eventFound = False
+        event_found = False
         for file in os.listdir('event-database'):
             try:
-                with open('event-database/' + file, 'r') as rsvpDb: 
-                    eventDetails = json.load(rsvpDb)
-                    if title in eventDetails['title'] and date in eventDetails['date']:
-                        guestList = ''
+                with open('event-database/' + file, 'r') as rsvpDb:
+                    event_details = json.load(rsvpDb)
+                    if title in event_details['title'] and date in event_details['date']:
+                        guest_list = ''
 
-                        if desiredType == 'going':
-                            if not eventDetails['attending']:
-                                guestList = 'No one is attending.'
+                        if desired_type == 'going':
+                            if not event_details['attending']:
+                                guest_list = 'No one is attending.'
                             else:
-                                for guest in eventDetails['attending']:
-                                    guestList = guestList + guest + '\n'
+                                for guest in event_details['attending']:
+                                    guest_list = guest_list + guest + '\n'
 
-                        elif desiredType == 'notgoing':
-                            if not eventDetails['not attending']:
-                                guestList = 'No one is not attending.'
+                        elif desired_type == 'notgoing':
+                            if not event_details['not attending']:
+                                guest_list = 'No one is not attending.'
                             else:
-                                for guest in eventDetails['not attending']:
-                                    guestList = guestList + guest + '\n'
+                                for guest in event_details['not attending']:
+                                    guest_list = guest_list + guest + '\n'
 
-                        elif desiredType == 'maybegoing':
-                            if not eventDetails['maybe attending']:
-                                guestList = 'No one is maybe attending.'
+                        elif desired_type == 'maybegoing':
+                            if not event_details['maybe attending']:
+                                guest_list = 'No one is maybe attending.'
                             else:
-                                for guest in eventDetails['maybe attending']:
-                                    guestList = guestList + guest + '\n'
+                                for guest in event_details['maybe attending']:
+                                    guest_list = guest_list + guest + '\n'
                         else:
                             await ctx.send('The type of guest that was specified is not correct. \n \
                                     The vaild types are: going, notgoing, maybegoing.')
-                        await ctx.send(guestList)
-                        eventFound = True
+                        await ctx.send(guest_list)
+                        event_found = True
             finally:
                 rsvpDb.close()
-        if not eventFound:
+        if not event_found:
             await ctx.send('The bot could not find the event specified.')
     except:
         traceback.print_exc()
-
-
