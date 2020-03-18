@@ -21,9 +21,6 @@ def verify_time(time):
     except:
         print('ERROR: Bad time')
 
-    print(e_time)
-    print(s_time)
-
     if (type(s_time) != int or s_time > 12 or
        type(e_time) != int or e_time > 12):
         print('Bad time')
@@ -71,9 +68,9 @@ def create_date_time(date, s_time, e_time):
     # if verify_time(s_time, e_time):
     # Create a datetime that looks like YYYY-MM-DDTHH:MM:SS
     start_datetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
-                     + s_time + ':' + '00']
+                      + s_time + ':' + '00']
     end_datetime = [date['Year'] + '-' + date['Month'] + '-' + date['Day'] + 'T'
-                   + e_time + ':' + '00']
+                    + e_time + ':' + '00']
 
     # print(start_datetime)
     # print(end_datetime)
@@ -85,7 +82,7 @@ def make_readable_date_time(date_time):
     date = split[0].split('-')
     date[0], date[1] = date[1], date[0]
     date[1], date[2] = date[2], date[1]
-    date = ('/').join(date)
+    date = '/'.join(date)
 
     time = {'start': split[1].split('-')[0], 'end': split[1].split('-')[1]}
     time['start'] = time['start'][:-3]
@@ -113,15 +110,12 @@ async def handle_event(ctx, title, date, s_time, e_time, desc, raw_date):
     event_message.set_author(name='Event')
     event_message.add_field(name='*Date*', value='/'.join([date.get('Month'), date.get('Day'), date.get('Year')]))
     event_message.add_field(name='*Time*', value='-'.join([s_time, e_time]), inline=False)
-    # event_info_msg = '```You created an event called ' + title + '. \n' \
-    #                + ' The event is scheduled on ' + date.get('Month') + '/' + date.get('Day') + '/' + date.get('Year') \
-    #                + ' from ' + s_time + ' to ' + e_time + '. \n' \
-    #                + ' The event\'s description is: ' + desc + '.```'
+
     await ctx.send(embed=event_message)
 
     try:
         event_id = str(botLastMsg.id)
-    # Add event via google calendar API
+        # Add event via google calendar API
         calendar.create_cal_event(title, create_date_time(date, s_time, e_time), desc, event_id, raw_date)
     except:
         event_id = None
